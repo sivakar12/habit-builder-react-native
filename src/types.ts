@@ -13,3 +13,5 @@ type HabitLog = {
 }
 
 type Orders = Id[]
+
+export { Id, Habit, HabitLog, Orders }
