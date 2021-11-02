@@ -1,15 +1,16 @@
 type Id = string;
+type DateString = string;
 
 type Habit = {
     id: Id,
     name: string,
-    createdTime: Date,
+    createdTime: DateString,
     archived: boolean,
     logs: HabitLog[]
 }
 
 type HabitLog = {
-    time: Date
+    time: DateString
 }
 
 type Orders = Id[]

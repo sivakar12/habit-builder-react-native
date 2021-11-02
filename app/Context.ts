@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import AsyncStorage from '@react-native-community/async-storage';
+import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react'
 import initialData from './InitialData'
 import { Habit, HabitLog, Id } from './Types'
 
@@ -16,12 +18,24 @@ const AppContext = React.createContext<HabitBuilderContext>({
 
 const makeInitialContextData = () => {
     const [habits, setHabits] = useState<Habit[]>(initialData)
+    useEffect(() => {
+        AsyncStorage.getItem('habitdatalogs').then(dataString => {
+            if (dataString) {
+                const dataParsed = JSON.parse(dataString) as Habit[]
+                setHabits(dataParsed)
+            }
+        })
+    }, [])
+    useEffect(() => {
+        AsyncStorage.setItem('habitdatalogs', JSON.stringify(habits))
+            .catch(() => { alert('failure to save')})
+    }, [habits])
 
     const incrementHabit = (habitId: Id) => {
         const newHabits = habits.map(habit => {
             if (habit.id === habitId) {
                 const log: HabitLog = {
-                    time: new Date()
+                    time: dayjs().toISOString()
                 }
                 return {...habit, logs: [...habit.logs, log]}
             } else {
