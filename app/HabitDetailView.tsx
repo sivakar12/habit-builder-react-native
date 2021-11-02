@@ -10,6 +10,7 @@ dayjs.extend(localizedFormat)
 import { AppContext } from './Context';
 import { fontSizes, padding } from './StyleConstants';
 import { HabitLog } from './Types';
+import Charts from './Charts'
 
 type LogListProps = {
     logs: HabitLog[]
@@ -56,6 +57,7 @@ const HabitDetailView = () => {
                 {habit.logs.length}
             </Text>
             <Text style={styles.habitName}>{habit.name}</Text>
+            <Charts logs={habit.logs}/>
             <LogList logs={habit.logs}/>
         </View>
     )
