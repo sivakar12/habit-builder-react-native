@@ -1,6 +1,12 @@
 import React, { useContext } from 'react'
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { useRoute } from '@react-navigation/core'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
+dayjs.extend(relativeTime)
+dayjs.extend(localizedFormat)
+
 import { AppContext } from './Context';
 import { fontSizes, padding } from './StyleConstants';
 import { HabitLog } from './Types';
@@ -10,10 +16,15 @@ type LogListProps = {
 }
 
 const LogListItem = ({ log }: { log: HabitLog}) => {
+    const absoluteTime = dayjs(log.time).format('lll')
+    const relativeTime = dayjs(log.time).fromNow()
     return (
         <View style={styles.logListItem}>
             <Text style={styles.logListItemText}>
-                {log.time.toISOString()}
+                {absoluteTime}
+            </Text>
+            <Text style={styles.logListItemText}>
+                {relativeTime}
             </Text>
         </View>
     )
@@ -67,10 +78,12 @@ const styles = StyleSheet.create({
     },
     logListItem: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
         padding: padding,
     },
     logListItemText: {
-        fontSize: fontSizes[1]
+        fontSize: fontSizes[1],
+        paddingHorizontal: padding
     }
 })
 
