@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useHabitsData } from './Hooks';
 import { padding, listItemColors, fontSizes } from './StyleConstants';
 import { Habit } from './Types';
@@ -13,9 +14,13 @@ type HabitPropType = {
 
 const HabitItem = ({ habit, onIncrement, color }: HabitPropType) => {
     const style = StyleSheet.compose(styles.habitItem, {'backgroundColor': color})
+    const navigation = useNavigation()
+    const handleOnPress = () => {
+        navigation.navigate('HabitDetail', { habitId: habit.id })
+    }
     return (
         <View style={style}> 
-            <Text style={styles.habitNameText}>{habit.name}</Text>
+            <Text style={styles.habitNameText} onPress={handleOnPress}>{habit.name}</Text>
             <Text style={styles.habitLogCount}>{habit.logs.length}</Text>
             <TouchableOpacity onPress={onIncrement}>
                 <Text style={styles.habitIncrementButton}>+</Text>
