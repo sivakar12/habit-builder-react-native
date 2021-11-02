@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useHabitsData } from './Hooks';
+import { AppContext } from './Context';
 import { padding, listItemColors, fontSizes } from './StyleConstants';
 import { Habit } from './Types';
 
@@ -38,7 +38,7 @@ const HabitList = ({ children }: HabitListPropType) => {
 }
 
 const HabitListView = () => {
-    const [habits, incrementHabit] = useHabitsData()
+    const {habits, incrementHabit} = useContext(AppContext);
     return (
         <View style={styles.habitListView}>
             <Text style={styles.title}>Habits Builder</Text>
