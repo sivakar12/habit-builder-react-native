@@ -1,41 +1,46 @@
-import React, { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import initialData from './InitialData';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useHabitsData } from './Hooks';
 import { padding } from './StyleConstants';
 import { Habit } from './Types';
 
-type HabitListPropType = { habits: Habit[] }
-type HabitPropType = { habit: Habit }
+type HabitListPropType = { children: React.ReactNode | React.ReactNode[] }
+type HabitPropType = { 
+    habit: Habit,
+    onIncrement: () => void
+}
 
-const HabitItem = ({ habit }: HabitPropType) => {
+const HabitItem = ({ habit, onIncrement }: HabitPropType) => {
     // TODO: Choose color based on the index and combine it with old style
     return (
         <View style={styles.habitItem}> 
             <Text style={{flexGrow: 1}}>{habit.name}</Text>
             <Text style={styles.habitLogCount}>{habit.logs.length}</Text>
-            <TouchableOpacity style={styles.habitIncrementButton} onPress={() => {}}>
+            <TouchableOpacity style={styles.habitIncrementButton} onPress={onIncrement}>
                 <Text>+</Text>
             </TouchableOpacity>
         </View>
     )
 }
 
-const HabitList = ({ habits }: HabitListPropType) => {
+const HabitList = ({ children }: HabitListPropType) => {
     return (
         <View style={styles.habitList}>
-            {habits.map(habit => 
-                <HabitItem habit={habit}/>
-            )}
+            {children}
         </View>
     )
 }
 
 const HabitListView = () => {
-    const [habits, setHabits] = useState(initialData)
+    const [habits, incrementHabit] = useHabitsData()
     return (
         <View style={styles.habitListView}>
             <Text>Habits Builder</Text>
-            <HabitList habits={habits}/>
+            <HabitList>
+                {habits.map(habit => 
+                    <HabitItem habit={habit} onIncrement={() => incrementHabit(habit.id)}/>
+                )}
+            </HabitList>
         </View>
     ) 
 }
