@@ -1,13 +1,37 @@
 import React, { useContext } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { useNavigation, useRoute } from '@react-navigation/core'
+import { View, Text, StyleSheet, FlatList } from 'react-native'
+import { useRoute } from '@react-navigation/core'
 import { AppContext } from './Context';
 import { fontSizes, padding } from './StyleConstants';
-import HabitListView from './HabitListView';
+import { HabitLog } from './Types';
+
+type LogListProps = {
+    logs: HabitLog[]
+}
+
+const LogListItem = ({ log }: { log: HabitLog}) => {
+    return (
+        <View style={styles.logListItem}>
+            <Text style={styles.logListItemText}>
+                {log.time.toISOString()}
+            </Text>
+        </View>
+    )
+}
+
+const LogList = ({ logs }: LogListProps) => {
+    return (
+        <FlatList
+            data={logs}
+            renderItem={({item}) => <LogListItem log={item}/>}
+            keyExtractor={log => log.time.getMilliseconds().toString()}
+        />
+    )
+}
 const HabitDetailView = () => {
     const routeData = useRoute()
-
     const habitId = routeData.params?.habitId as Id
+    
     const { getHabitById } = useContext(AppContext)
     const habit = getHabitById(habitId)
 
@@ -21,6 +45,7 @@ const HabitDetailView = () => {
                 {habit.logs.length}
             </Text>
             <Text style={styles.habitName}>{habit.name}</Text>
+            <LogList logs={habit.logs}/>
         </View>
     )
 }
@@ -36,6 +61,16 @@ const styles = StyleSheet.create({
     habitName: {
         fontSize: fontSizes[0],
         alignSelf: 'center'
+    },
+    logList: {
+
+    },
+    logListItem: {
+        flexDirection: 'row',
+        padding: padding,
+    },
+    logListItemText: {
+        fontSize: fontSizes[1]
     }
 })
 
