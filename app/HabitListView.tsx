@@ -88,7 +88,8 @@ const styles = StyleSheet.create({
         flex: 1
     },
     title: {
-        fontSize: fontSizes[0]
+        fontSize: fontSizes[0],
+        alignSelf: 'center'
     }
 })
 
