@@ -1,23 +1,24 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useHabitsData } from './Hooks';
-import { padding } from './StyleConstants';
+import { padding, listItemColors, fontSizes } from './StyleConstants';
 import { Habit } from './Types';
 
 type HabitListPropType = { children: React.ReactNode | React.ReactNode[] }
 type HabitPropType = { 
     habit: Habit,
+    color: string,
     onIncrement: () => void
 }
 
-const HabitItem = ({ habit, onIncrement }: HabitPropType) => {
-    // TODO: Choose color based on the index and combine it with old style
+const HabitItem = ({ habit, onIncrement, color }: HabitPropType) => {
+    const style = StyleSheet.compose(styles.habitItem, {'backgroundColor': color})
     return (
-        <View style={styles.habitItem}> 
-            <Text style={{flexGrow: 1}}>{habit.name}</Text>
+        <View style={style}> 
+            <Text style={styles.habitNameText}>{habit.name}</Text>
             <Text style={styles.habitLogCount}>{habit.logs.length}</Text>
-            <TouchableOpacity style={styles.habitIncrementButton} onPress={onIncrement}>
-                <Text>+</Text>
+            <TouchableOpacity onPress={onIncrement}>
+                <Text style={styles.habitIncrementButton}>+</Text>
             </TouchableOpacity>
         </View>
     )
@@ -35,11 +36,13 @@ const HabitListView = () => {
     const [habits, incrementHabit] = useHabitsData()
     return (
         <View style={styles.habitListView}>
-            <Text>Habits Builder</Text>
+            <Text style={styles.title}>Habits Builder</Text>
             <HabitList>
-                {habits.map(habit => 
-                    <HabitItem habit={habit} onIncrement={() => incrementHabit(habit.id)}/>
-                )}
+                {habits.map((habit, i) => {
+                    const color = listItemColors[i % listItemColors.length]
+                    const onIncrementHandler = () => incrementHabit(habit.id)
+                    return <HabitItem habit={habit} onIncrement={onIncrementHandler} color={color}/>
+                })}
             </HabitList>
         </View>
     ) 
@@ -48,24 +51,34 @@ const styles = StyleSheet.create({
     habitItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: 200,
         height: 40,
-        alignItems: 'center'
+        alignItems: 'center',
+        padding: padding,
+        fontSize: fontSizes[1]
     },
     habitList: {
         flex: 1,
-        alignItems: 'center'
     },
     habitLogCount: {
-        padding: padding
+        padding: padding,
+        fontSize: fontSizes[1],
+        paddingHorizontal: padding,
+        fontWeight: 'bold'
     },
     habitIncrementButton: {
-        backgroundColor: '#fff',
-        padding: padding
+        backgroundColor: '#fff0',
+        fontSize: fontSizes[1],
+        paddingHorizontal: padding
+    },
+    habitNameText: {
+        fontSize: fontSizes[1],
+        flexGrow: 1
     },
     habitListView: {
-        flex: 1,
-        alignItems: 'center'
+        flex: 1
+    },
+    title: {
+        fontSize: fontSizes[0]
     }
 })
 
