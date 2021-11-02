@@ -12,7 +12,7 @@ export default function App() {
   const Stack = createNativeStackNavigator()
   Stack.Navigator.defaultProps = {
     screenOptions: {
-      headerShown: false
+      headerShown: true
     }
   }
   
@@ -24,10 +24,12 @@ export default function App() {
             <Stack.Screen 
               name="HabitList"
               component={HabitListView}
+              options={{ title: 'Habits' }}
             />
             <Stack.Screen
               name="HabitDetail"
               component={HabitDetailView}
+              options={{ title: 'Progress' }}
             />
           </Stack.Navigator>
         </SafeAreaView>

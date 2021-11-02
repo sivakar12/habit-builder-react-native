@@ -16,7 +16,7 @@ const HabitItem = ({ habit, onIncrement, color }: HabitPropType) => {
     const style = StyleSheet.compose(styles.habitItem, {'backgroundColor': color})
     const navigation = useNavigation()
     const handleOnPress = () => {
-        navigation.navigate('HabitDetail', { habitId: habit.id })
+        navigation.navigate('HabitDetail', { habitId: habit.id, title: habit.name })
     }
     return (
         <View style={style}> 
@@ -41,7 +41,6 @@ const HabitListView = () => {
     const {habits, incrementHabit} = useContext(AppContext);
     return (
         <View style={styles.habitListView}>
-            <Text style={styles.title}>Habits Builder</Text>
             <HabitList>
                 {habits.map((habit, i) => {
                     const color = listItemColors[i % listItemColors.length]

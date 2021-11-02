@@ -3,36 +3,35 @@ import { View, Text, StyleSheet } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/core'
 import { AppContext } from './Context';
 import { fontSizes, padding } from './StyleConstants';
+import HabitListView from './HabitListView';
 const HabitDetailView = () => {
     const routeData = useRoute()
-    const navigate = useNavigation()
 
     const habitId = routeData.params?.habitId as Id
     const { getHabitById } = useContext(AppContext)
     const habit = getHabitById(habitId)
 
-    const handleGoBack = () => { navigate.goBack() }
+    if (!habit) {
+        return <View><Text>404</Text></View>
+    }
 
     return (
-        <View>
-            <View style={styles.topBar}>
-                <Text style={styles.closeButton} onPress={handleGoBack}>x</Text>
-                <Text style={styles.habitName}>Habit: {habit? habit.name: 'Unknown'}</Text>
-            </View>
+        <View style={styles.detailScreen}>
+            <Text style={styles.bigNumber}>
+                {habit.logs.length}
+            </Text>
+            <Text style={styles.habitName}>{habit.name}</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     detailScreen: {
-        flex: 1
+        flex: 1,
+        alignItems: 'center'
     },
-    closeButton: {
-        fontSize: fontSizes[1]
-    },
-    topBar: {
-        flexDirection: 'row',
-        justifyContent: 'center'
+    bigNumber: {
+        fontSize: 100
     },
     habitName: {
         fontSize: fontSizes[0],
