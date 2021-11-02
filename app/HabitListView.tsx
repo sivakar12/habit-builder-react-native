@@ -41,7 +41,13 @@ const HabitListView = () => {
                 {habits.map((habit, i) => {
                     const color = listItemColors[i % listItemColors.length]
                     const onIncrementHandler = () => incrementHabit(habit.id)
-                    return <HabitItem habit={habit} onIncrement={onIncrementHandler} color={color}/>
+                    return (
+                        <HabitItem 
+                            key={habit.id}
+                            habit={habit} 
+                            onIncrement={onIncrementHandler} 
+                            color={color}/>
+                    )
                 })}
             </HabitList>
         </View>
@@ -51,7 +57,6 @@ const styles = StyleSheet.create({
     habitItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        height: 40,
         alignItems: 'center',
         padding: padding,
         fontSize: fontSizes[1]
