@@ -36,7 +36,7 @@ const LogList = ({ logs }: LogListProps) => {
         <FlatList
             data={logs}
             renderItem={({item}) => <LogListItem log={item}/>}
-            keyExtractor={log => dayjs(log.time).millisecond().toString()}
+            keyExtractor={log => log.time}
         />
     )
 }
