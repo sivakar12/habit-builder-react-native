@@ -51,12 +51,27 @@ const PeriodChanger = ({periodType, onChange}: PeriodChangerPropType) => {
     const [endTime, setEndTime] = useState(dayjs().endOf(periodType))
 
     useEffect(() => {
-        setStartTime(startTime.startOf(periodType))
-        setEndTime(startTime.endOf(periodType))
+        setStartTime(endTime.startOf(periodType))
+        setEndTime(endTime.endOf(periodType))
     }, [periodType])
 
     // const timeDisplay = startTime.format('MMMM D, YYYY')
-    const timeDisplay = startTime.toISOString() + ' - ' + endTime.toISOString()
+    let timeDisplay: string
+    switch (periodType) {
+        case PeriodType.Day:
+            timeDisplay = startTime.format('MMMM D, YYYY')
+            break;
+        case PeriodType.Week:
+            timeDisplay = startTime.format('MMMM D, YYYY') + ' : ' + endTime.format('MMMM D, YYYY')
+            break;
+        case PeriodType.Month:
+            timeDisplay = startTime.format('MMMM YYYY')
+            break;
+        case PeriodType.Year:
+            timeDisplay = startTime.format('YYYY')
+            break;
+    }
+    const timeDebugDisplay = startTime.toISOString() + ' - ' + endTime.toISOString()
     const handlePrevious = () => {
         setStartTime(startTime.subtract(1, periodType))
         setEndTime(endTime.subtract(1, periodType))
@@ -82,7 +97,7 @@ type ChartsPropType = {
 const Charts = ({logs}: ChartsPropType) => {
     const [periodType, setPeriodType] = useState(PeriodType.Day)
     return (
-        <View>
+        <View style={styles.chartContainer}>
             <PeriodChooser 
                 periodType={periodType}
                 onChange={setPeriodType}
@@ -96,8 +111,12 @@ const Charts = ({logs}: ChartsPropType) => {
 }
 
 const styles = StyleSheet.create({
+    chartContainer: {
+        alignContent: 'stretch'
+    },
     chooser: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'center'
     },
     chooserValueText: {
         fontSize: fontSizes[1],
