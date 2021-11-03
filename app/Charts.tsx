@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(utc)
 import { fontSizes, padding } from './StyleConstants'
 import { HabitLog } from './Types'
 
@@ -33,6 +36,34 @@ const PeriodChooser = ({ periodType: selectedPeriodType, onChange}: PeriodChoose
     )
 }
 
+type PeriodChangerPropType = {
+    periodType: PeriodType
+    onChange: (startTime: String, endTime: String) => void
+}
+
+const PeriodChanger = (props: PeriodChangerPropType) => {
+    // Doing this for day only for now
+    const [startTime, setStartTime] = useState(dayjs().startOf('date'))
+    const [endTime, setEndTime] = useState(dayjs().endOf('date'))
+    const timeDisplay = startTime.format('MMMM D, YYYY')
+    // const timeDisplay = startTime.toISOString() + ' - ' + endTime.toISOString()
+    const handlePrevious = () => {
+        setStartTime(startTime.subtract(1, 'day'))
+        setEndTime(endTime.subtract(1, 'day'))
+    }
+    const handleNext = () => {
+        setStartTime(startTime.add(1, 'day'))
+        setEndTime(endTime.add(1, 'day'))
+    }
+    return (
+        <View style={styles.periodChangerRow}>
+            <Text style={styles.periodChangerArrow} onPress={handlePrevious}>&lt;</Text>
+            <Text style={styles.periodChangerDisplay}>{timeDisplay}</Text>
+            <Text style={styles.periodChangerArrow} onPress={handleNext}>&gt;</Text>
+        </View>
+    )
+}
+
 type ChartsPropType = {
     logs: HabitLog[]
 }
@@ -43,6 +74,10 @@ const Charts = ({logs}: ChartsPropType) => {
             <PeriodChooser 
                 periodType={periodType}
                 onChange={setPeriodType}
+            />
+            <PeriodChanger
+                periodType={periodType}
+                onChange={(s, e) => {}}
             />
         </View>
     )
@@ -55,6 +90,16 @@ const styles = StyleSheet.create({
     chooserValueText: {
         fontSize: fontSizes[1],
         padding: padding
+    },
+    periodChangerRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    periodChangerArrow: {
+        fontSize: fontSizes[1]
+    },
+    periodChangerDisplay: {
+        fontSize: fontSizes[1],
     }
 })
 
