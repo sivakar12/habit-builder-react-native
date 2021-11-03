@@ -18,14 +18,15 @@ const AppContext = React.createContext<HabitBuilderContext>({
 
 const makeInitialContextData = () => {
     const [habits, setHabits] = useState<Habit[]>(initialData)
-    useEffect(() => {
-        AsyncStorage.getItem('habitdatalogs').then(dataString => {
-            if (dataString) {
-                const dataParsed = JSON.parse(dataString) as Habit[]
-                setHabits(dataParsed)
-            }
-        })
-    }, [])
+    // TODO: Only to work on production. Disable the random generation on prod too
+    // useEffect(() => {
+    //     AsyncStorage.getItem('habitdatalogs').then(dataString => {
+    //         if (dataString) {
+    //             const dataParsed = JSON.parse(dataString) as Habit[]
+    //             setHabits(dataParsed)
+    //         }
+    //     })
+    // }, [])
     useEffect(() => {
         AsyncStorage.setItem('habitdatalogs', JSON.stringify(habits))
             .catch(() => { alert('failure to save')})

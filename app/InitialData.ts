@@ -1,49 +1,47 @@
 import dayjs from "dayjs";
-import { Habit } from "./Types";
+import { Habit, HabitLog } from "./Types";
 
+const createRandomDates = (startDate: Date, endDate: Date, n: number): Date[] => {
+    const startMillis = startDate.getTime()
+    const endMillis = endDate.getTime()
+    const intervalMillis = endMillis - startMillis
+    const outputMillis: number[] = []
+    for (let i = 0; i < n; i++) {
+        const newMillis = startMillis + intervalMillis * Math.random()
+        outputMillis.push(newMillis)
+    }
+    const dates = outputMillis.sort().map(m => new Date(m))
+    return dates
+}
 
+const dateToHabitLog = (date: Date): HabitLog => ({
+    time: date.toISOString()
+})
+
+const sampleStartDate = new Date(2020, 1, 1)
+const sampleEndDate = new Date(2021, 10, 3)
 // TODO: Refactor date transformations
 const habits: Habit[] = [
     {
         id: '1',
         name: 'Drink Water',
-        createdTime: dayjs(new Date()).toISOString(),
+        createdTime: (new Date()).toISOString(),
         archived: false,
-        logs: []
+        logs: createRandomDates(sampleStartDate, sampleEndDate, 1000).map(dateToHabitLog)
     },
     {
         id: '2',
         name: 'Do Planks',
-        createdTime: dayjs(new Date()).toISOString(),
+        createdTime: (new Date()).toISOString(),
         archived: false,
-        logs: [
-            {
-                time: dayjs(new Date(2020, 10, 5, 12, 11, 23)).toISOString()
-            },
-            {
-                time: dayjs(new Date(2020, 10, 6, 7, 10, 43)).toISOString()
-            }
-        ]
+        logs: createRandomDates(sampleStartDate, sampleEndDate, 500).map(dateToHabitLog)
     },
     {
         id: '3',
         name: 'Meditate',
-        createdTime: dayjs(new Date()).toISOString(),
+        createdTime: (new Date()).toISOString(),
         archived: false,
-        logs: [
-            {
-                time: dayjs(new Date(2020, 11, 2, 12, 11, 23)).toISOString()
-            },
-            {
-                time: dayjs(new Date(2020, 12, 2, 12, 11, 23)).toISOString()
-            },
-            {
-                time: dayjs(new Date(2020, 12, 3, 12, 34, 3)).toISOString()
-            },
-            {
-                time: dayjs(new Date(2020, 12, 4, 7, 12, 3)).toISOString()
-            }
-        ]
+        logs: createRandomDates(sampleStartDate, sampleEndDate, 750).map(dateToHabitLog)
     }
 ]
 
