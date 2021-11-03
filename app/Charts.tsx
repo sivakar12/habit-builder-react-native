@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -7,10 +7,10 @@ import { fontSizes, padding } from './StyleConstants'
 import { HabitLog } from './Types'
 
 enum PeriodType {
-    Day = "Day",
-    Week = "Week",
-    Month = "Month",
-    Year = "Year"
+    Day = "day",
+    Week = "week",
+    Month = "month",
+    Year = "year"
 }
 
 type PeriodChooserPropType = {
@@ -41,19 +41,31 @@ type PeriodChangerPropType = {
     onChange: (startTime: String, endTime: String) => void
 }
 
-const PeriodChanger = (props: PeriodChangerPropType) => {
-    // Doing this for day only for now
-    const [startTime, setStartTime] = useState(dayjs().startOf('date'))
-    const [endTime, setEndTime] = useState(dayjs().endOf('date'))
-    const timeDisplay = startTime.format('MMMM D, YYYY')
-    // const timeDisplay = startTime.toISOString() + ' - ' + endTime.toISOString()
+const PeriodChanger = ({periodType, onChange}: PeriodChangerPropType) => {
+    // alert('rerendering')
+    // I am passing peroidType directly into dayjs startOf, endOf, add and subtract
+    // functions because the string values under the enum matches what is required
+    // by dayjs
+
+    const [startTime, setStartTime] = useState(dayjs().startOf(periodType))
+    const [endTime, setEndTime] = useState(dayjs().endOf(periodType))
+
+    useEffect(() => {
+        setStartTime(startTime.startOf(periodType))
+        setEndTime(startTime.endOf(periodType))
+    }, [periodType])
+
+    // const timeDisplay = startTime.format('MMMM D, YYYY')
+    const timeDisplay = startTime.toISOString() + ' - ' + endTime.toISOString()
     const handlePrevious = () => {
-        setStartTime(startTime.subtract(1, 'day'))
-        setEndTime(endTime.subtract(1, 'day'))
+        setStartTime(startTime.subtract(1, periodType))
+        setEndTime(endTime.subtract(1, periodType))
+        onChange(startTime.toISOString(), endTime.toISOString())
     }
     const handleNext = () => {
-        setStartTime(startTime.add(1, 'day'))
-        setEndTime(endTime.add(1, 'day'))
+        setStartTime(startTime.add(1, periodType))
+        setEndTime(endTime.add(1, periodType))
+        onChange(startTime.toISOString(), endTime.toISOString())
     }
     return (
         <View style={styles.periodChangerRow}>
