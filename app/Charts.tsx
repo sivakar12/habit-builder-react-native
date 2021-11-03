@@ -92,9 +92,9 @@ const PeriodChanger = ({periodType, onChange}: PeriodChangerPropType) => {
 }
 
 type ChartsPropType = {
-    logs: HabitLog[]
+    timestampsSortedDown: number[]
 }
-const Charts = ({logs}: ChartsPropType) => {
+const Charts = ({timestampsSortedDown: time}: ChartsPropType) => {
     const [periodType, setPeriodType] = useState(PeriodType.Day)
     return (
         <View style={styles.chartContainer}>

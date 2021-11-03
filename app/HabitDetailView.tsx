@@ -13,12 +13,12 @@ import { HabitLog } from './Types';
 import Charts from './Charts'
 
 type LogListProps = {
-    logs: HabitLog[]
+    timestampsSortedDown: number[]
 }
 
-const LogListItem = ({ log }: { log: HabitLog}) => {
-    const absoluteTime = dayjs(log.time).format('lll')
-    const relativeTime = dayjs(log.time).fromNow()
+const LogListItem = ({ millisecond }: { millisecond: number}) => {
+    const absoluteTime = dayjs(millisecond).format('lll')
+    const relativeTime = dayjs(millisecond).fromNow()
     return (
         <View style={styles.logListItem}>
             <Text style={styles.logListItemText}>
@@ -31,12 +31,12 @@ const LogListItem = ({ log }: { log: HabitLog}) => {
     )
 }
 
-const LogList = ({ logs }: LogListProps) => {
+const LogList = ({ timestampsSortedDown }: LogListProps) => {
     return (
         <FlatList
-            data={logs}
-            renderItem={({item}) => <LogListItem log={item}/>}
-            keyExtractor={log => log.time}
+            data={timestampsSortedDown}
+            renderItem={({item}) => <LogListItem millisecond={item}/>}
+            keyExtractor={ms => ms.toString()}
         />
     )
 }
@@ -46,10 +46,11 @@ const HabitDetailView = () => {
     
     const { getHabitById } = useContext(AppContext)
     const habit = getHabitById(habitId)
-
     if (!habit) {
         return <View><Text>404</Text></View>
     }
+    const timestampsSortedDown: number[] =
+        habit.logs.map(l => (new Date(l.time)).getTime()).sort((a, b) => b - a)
 
     return (
         <View style={styles.detailScreen}>
@@ -57,8 +58,8 @@ const HabitDetailView = () => {
                 {habit.logs.length}
             </Text>
             <Text style={styles.habitName}>{habit.name}</Text>
-            <Charts logs={habit.logs}/>
-            <LogList logs={habit.logs}/>
+            <Charts timestampsSortedDown={timestampsSortedDown}/>
+            <LogList timestampsSortedDown={timestampsSortedDown}/>
         </View>
     )
 }
