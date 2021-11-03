@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import { AppContext } from './Context';
+import { AppContext } from './State';
 import { padding, listItemColors, fontSizes } from './StyleConstants';
 import { Habit } from './Types';
 

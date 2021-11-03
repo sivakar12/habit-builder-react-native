@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import HabitListView from './app/HabitListView';
 import HabitDetailView from './app/HabitDetailView';
-import { AppContext, makeInitialContextData } from './app/Context';
+import { AppContext, makeInitialContextData } from './app/State';
 
 export default function App() {
 

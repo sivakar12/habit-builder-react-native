@@ -7,7 +7,7 @@ import localizedFormat from 'dayjs/plugin/localizedFormat'
 dayjs.extend(relativeTime)
 dayjs.extend(localizedFormat)
 
-import { AppContext } from './Context';
+import { AppContext } from './State';
 import { fontSizes, padding } from './StyleConstants';
 import { HabitLog } from './Types';
 import Charts from './Charts'
