@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
+import _ from 'lodash'
 import { fontSizes, padding } from './StyleConstants'
-import { HabitLog } from './Types'
 
 enum PeriodType {
     Day = "day",
@@ -37,25 +37,17 @@ const PeriodChooser = ({ periodType: selectedPeriodType, onChange}: PeriodChoose
 }
 
 type PeriodChangerPropType = {
-    periodType: PeriodType
-    onChange: (startTime: String, endTime: String) => void
+    periodType: PeriodType,
+    startTime: Dayjs,
+    endTime: Dayjs,
+    onChange: (startTime: Dayjs, endTime: Dayjs) => void
 }
 
-const PeriodChanger = ({periodType, onChange}: PeriodChangerPropType) => {
-    // alert('rerendering')
+const PeriodChanger = ({periodType, startTime, endTime, onChange}: PeriodChangerPropType) => {
     // I am passing peroidType directly into dayjs startOf, endOf, add and subtract
     // functions because the string values under the enum matches what is required
     // by dayjs
 
-    const [startTime, setStartTime] = useState(dayjs().startOf(periodType))
-    const [endTime, setEndTime] = useState(dayjs().endOf(periodType))
-
-    useEffect(() => {
-        setStartTime(endTime.startOf(periodType))
-        setEndTime(endTime.endOf(periodType))
-    }, [periodType])
-
-    // const timeDisplay = startTime.format('MMMM D, YYYY')
     let timeDisplay: string
     switch (periodType) {
         case PeriodType.Day:
@@ -71,21 +63,21 @@ const PeriodChanger = ({periodType, onChange}: PeriodChangerPropType) => {
             timeDisplay = startTime.format('YYYY')
             break;
     }
-    const timeDebugDisplay = startTime.toISOString() + ' - ' + endTime.toISOString()
+    const timeDebugDisplay = startTime.toDate().toString() + ' - ' + endTime.toDate().toString()
     const handlePrevious = () => {
-        setStartTime(startTime.subtract(1, periodType))
-        setEndTime(endTime.subtract(1, periodType))
-        onChange(startTime.toISOString(), endTime.toISOString())
+        const newStartTime = startTime.subtract(1, periodType)
+        const newEndTime = endTime.subtract(1, periodType)
+        onChange(newStartTime, newEndTime)
     }
     const handleNext = () => {
-        setStartTime(startTime.add(1, periodType))
-        setEndTime(endTime.add(1, periodType))
-        onChange(startTime.toISOString(), endTime.toISOString())
+        const newStartTime = startTime.add(1, periodType)
+        const newEndTime = endTime.add(1, periodType)
+        onChange(newStartTime, newEndTime)
     }
     return (
         <View style={styles.periodChangerRow}>
             <Text style={styles.periodChangerArrow} onPress={handlePrevious}>&lt;</Text>
-            <Text style={styles.periodChangerDisplay}>{timeDisplay}</Text>
+            <Text style={styles.periodChangerDisplay}>{timeDebugDisplay}</Text>
             <Text style={styles.periodChangerArrow} onPress={handleNext}>&gt;</Text>
         </View>
     )
@@ -94,8 +86,68 @@ const PeriodChanger = ({periodType, onChange}: PeriodChangerPropType) => {
 type ChartsPropType = {
     timestampsSortedDown: number[]
 }
-const Charts = ({timestampsSortedDown: time}: ChartsPropType) => {
+const Charts = ({timestampsSortedDown}: ChartsPropType) => {
     const [periodType, setPeriodType] = useState(PeriodType.Day)
+    const initialStartDate = dayjs().startOf(periodType)
+    const initialEndDate = dayjs().endOf(periodType)
+
+    
+    const [[filterDateStart, filterDateEnd], setFilterRange] = useState([initialStartDate, initialEndDate])
+    useEffect(() => {
+        setFilterRange([filterDateEnd.startOf(periodType), filterDateEnd.endOf(periodType)])
+    }, [periodType])
+    
+    console.log(filterDateStart, filterDateEnd)
+    const startTimestamp = filterDateStart.toDate().getTime()
+    const endTimestamp = filterDateEnd.toDate().getTime()
+    
+    // TODO: Make a better filter as this is a sorted array
+    const filteredTimestamps = timestampsSortedDown.filter(t => 
+        t < endTimestamp && t > startTimestamp)
+    // const filteredTimestamps = timestampsSortedDown
+
+    console.log(startTimestamp, endTimestamp, timestampsSortedDown, filteredTimestamps)
+    let labels: string[] | number[];
+    let counts: { [label: string | number]: number } = {};
+    switch (periodType) {
+        case PeriodType.Day:
+            const hours = _.range(0, 24)
+            labels = hours
+            counts = Object.fromEntries(hours.map(h => [h, 0]))
+            filteredTimestamps.forEach(t => {
+                const hour = dayjs(t).hour()
+                counts[hour] += 1
+            })
+            break
+        case PeriodType.Week:
+            labels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+            counts = Object.fromEntries(labels.map(l => [l, 0]))
+            filteredTimestamps.forEach(t => {
+                const day = labels[dayjs(t).day()]
+                counts[day] += 1
+            })
+            break
+        case PeriodType.Month:
+            const days = _.range(1, dayjs(startTimestamp).daysInMonth() + 1)
+            labels = days
+            counts = Object.fromEntries(days.map(d => [d, 0]))
+            filteredTimestamps.forEach(t => {
+                const date = dayjs(t).date()
+                counts[date] += 1
+            })
+            break
+        case PeriodType.Year:
+            const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December']
+            labels = months
+            counts = Object.fromEntries(months.map(m => [m, 0]))
+            filteredTimestamps.forEach(t => {
+                const month = months[dayjs(t).month()]
+                counts[month] += 1
+            })
+            break
+    }
+    const ChartView = () => <Text>{JSON.stringify(counts)}</Text>
     return (
         <View style={styles.chartContainer}>
             <PeriodChooser 
@@ -104,8 +156,11 @@ const Charts = ({timestampsSortedDown: time}: ChartsPropType) => {
             />
             <PeriodChanger
                 periodType={periodType}
-                onChange={(s, e) => {}}
+                startTime={filterDateStart}
+                endTime={filterDateEnd}
+                onChange={(s, e) => { setFilterRange([s, e])}}
             />
+            <ChartView/>
         </View>
     )
 }
