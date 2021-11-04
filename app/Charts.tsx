@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native'
 import dayjs, { Dayjs } from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 import _ from 'lodash'
-import { fontSizes, padding } from './StyleConstants'
-
+import { fontSizes, listItemColors, padding } from './StyleConstants'
+import { BarChart } from "react-native-chart-kit";
 enum PeriodType {
     Day = "day",
     Week = "week",
@@ -51,16 +51,16 @@ const PeriodChanger = ({periodType, startTime, endTime, onChange}: PeriodChanger
     let timeDisplay: string
     switch (periodType) {
         case PeriodType.Day:
-            timeDisplay = startTime.format('MMMM D, YYYY')
+            timeDisplay = startTime.local().format('MMMM D, YYYY')
             break;
         case PeriodType.Week:
-            timeDisplay = startTime.format('MMMM D, YYYY') + ' : ' + endTime.format('MMMM D, YYYY')
+            timeDisplay = startTime.local().format('MMMM D, YYYY') + ' : ' + endTime.format('MMMM D, YYYY')
             break;
         case PeriodType.Month:
-            timeDisplay = startTime.format('MMMM YYYY')
+            timeDisplay = startTime.local().format('MMMM YYYY')
             break;
         case PeriodType.Year:
-            timeDisplay = startTime.format('YYYY')
+            timeDisplay = startTime.local().format('YYYY')
             break;
     }
     const timeDebugDisplay = startTime.toDate().toString() + ' - ' + endTime.toDate().toString()
@@ -76,9 +76,9 @@ const PeriodChanger = ({periodType, startTime, endTime, onChange}: PeriodChanger
     }
     return (
         <View style={styles.periodChangerRow}>
-            <Text style={styles.periodChangerArrow} onPress={handlePrevious}>&lt;</Text>
-            <Text style={styles.periodChangerDisplay}>{timeDebugDisplay}</Text>
-            <Text style={styles.periodChangerArrow} onPress={handleNext}>&gt;</Text>
+            <Text style={styles.periodChangerArrow} onPress={handlePrevious}>&lt;&nbsp;</Text>
+            <Text style={styles.periodChangerDisplay}>{timeDisplay}</Text>
+            <Text style={styles.periodChangerArrow} onPress={handleNext}>&nbsp;&gt;</Text>
         </View>
     )
 }
@@ -147,7 +147,36 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
             })
             break
     }
-    const ChartView = () => <Text>{JSON.stringify(counts)}</Text>
+    const chartData = {
+        labels: labels.map(l => l.toString()),
+        datasets: [
+            { data: labels.map(l => counts[l]) }
+        ]
+    }
+    const screenWidth = Dimensions.get('window').width
+    const chartWidth = screenWidth * 0.8
+    const chartHeight = 200
+    const chartConfig = {
+        backgroundGradientFrom: listItemColors[0],
+        backgroundGradientFromOpacity: 0.5,
+        backgroundGradientTo: listItemColors[0],
+        backgroundGradientToOpacity: 0.5,
+        fillShadowGradient: listItemColors[1],
+        fillShadowGradientOpacity: 0.5,
+        color: (opacity = 1) => listItemColors[1],
+        strokeWidth: 2, // optional, default 3
+        barPercentage: 0.5,
+    }
+    const ChartView = () => 
+        <BarChart 
+            data={chartData} 
+            width={screenWidth}
+            height={chartHeight}
+            chartConfig={chartConfig}
+            yAxisLabel={''}
+            xAxisLabel={''}
+            yAxisSuffix={''}
+        />
     return (
         <View style={styles.chartContainer}>
             <PeriodChooser 
@@ -160,7 +189,9 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
                 endTime={filterDateEnd}
                 onChange={(s, e) => { setFilterRange([s, e])}}
             />
-            <ChartView/>
+            <ScrollView horizontal={true}>
+                <ChartView/>
+            </ScrollView>
         </View>
     )
 }
@@ -179,7 +210,7 @@ const styles = StyleSheet.create({
     },
     periodChangerRow: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'center'
     },
     periodChangerArrow: {
         fontSize: fontSizes[1]
