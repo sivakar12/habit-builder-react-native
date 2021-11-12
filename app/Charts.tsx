@@ -5,7 +5,7 @@ import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 import _ from 'lodash'
 import { fontSizes, listItemColors, padding } from './StyleConstants'
-import { BarChart } from "react-native-chart-kit";
+import { VictoryChart, VictoryBar } from "victory-native"
 enum PeriodType {
     Day = "day",
     Week = "week",
@@ -147,36 +147,48 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
             })
             break
     }
-    const chartData = {
-        labels: labels.map(l => l.toString()),
-        datasets: [
-            { data: labels.map(l => counts[l]) }
-        ]
-    }
-    const screenWidth = Dimensions.get('window').width
-    const chartWidth = screenWidth * 0.8
-    const chartHeight = 200
-    const chartConfig = {
-        backgroundGradientFrom: listItemColors[0],
-        backgroundGradientFromOpacity: 0.5,
-        backgroundGradientTo: listItemColors[0],
-        backgroundGradientToOpacity: 0.5,
-        fillShadowGradient: listItemColors[1],
-        fillShadowGradientOpacity: 0.5,
-        color: (opacity = 1) => listItemColors[1],
-        strokeWidth: 2, // optional, default 3
-        barPercentage: 0.5,
-    }
+    const chartData = labels.map(label => ({
+        x: label,
+        y: counts[label]
+    }))
+
     const ChartView = () => 
-        <BarChart 
-            data={chartData} 
-            width={screenWidth}
-            height={chartHeight}
-            chartConfig={chartConfig}
-            yAxisLabel={''}
-            xAxisLabel={''}
-            yAxisSuffix={''}
-        />
+        <VictoryChart>
+            <VictoryBar
+                data={chartData}
+                categories={{x: labels.map(s => s.toString())}}
+            />
+        </VictoryChart>
+    // const chartData = {
+    //     labels: labels.map(l => l.toString()),
+    //     datasets: [
+    //         { data: labels.map(l => counts[l]) }
+    //     ]
+    // }
+    // const screenWidth = Dimensions.get('window').width
+    // const chartWidth = screenWidth * 0.8
+    // const chartHeight = 200
+    // const chartConfig = {
+    //     backgroundGradientFrom: listItemColors[0],
+    //     backgroundGradientFromOpacity: 0.5,
+    //     backgroundGradientTo: listItemColors[0],
+    //     backgroundGradientToOpacity: 0.5,
+    //     fillShadowGradient: listItemColors[1],
+    //     fillShadowGradientOpacity: 0.5,
+    //     color: (opacity = 1) => listItemColors[1],
+    //     strokeWidth: 2, // optional, default 3
+    //     barPercentage: 0.5,
+    // }
+    // const ChartView = () => 
+    //     <BarChart 
+    //         data={chartData} 
+    //         width={screenWidth}
+    //         height={chartHeight}
+    //         chartConfig={chartConfig}
+    //         yAxisLabel={''}
+    //         xAxisLabel={''}
+    //         yAxisSuffix={''}
+    //     />
     return (
         <View style={styles.chartContainer}>
             <PeriodChooser 
