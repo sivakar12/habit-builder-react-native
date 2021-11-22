@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, Platform, StatusBar } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, StatusBar, Alert } from 'react-native';
 
 import HabitListView from './app/HabitListView';
 import HabitDetailView from './app/HabitDetailView';
@@ -15,7 +15,13 @@ export default function App() {
   const menuItems = [
     {
       text: 'New Habit',
-      handler: () => {}
+      handler: () => {
+        Alert.prompt('Name', 'Enter name of habit', (habitName) => {
+          if (habitName) {
+            // TODO: Add to the list in memory
+          }
+        })
+      }
     },
     {
       text: 'Export data',

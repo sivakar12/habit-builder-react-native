@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, Modal } from 'react-native'
+import { View, Text, StyleSheet, Modal, SafeAreaView } from 'react-native'
 
 type MenuItem = {
   text: string,
@@ -14,28 +14,37 @@ type MenuProps = {
 
 const Menu = ({ open, items, onClose }: MenuProps) => {
   return (
-    <Modal style={styles.menuModal} visible={open}>
+    <Modal style={styles.menuModal} visible={open} animationType="slide">
+      <SafeAreaView>
       <View style={styles.menuList}>
-        <View style={styles.closeButton}>
+        {/* <View style={styles.closeButton}>
           <Text onPress={onClose} style={styles.closeButtonText}>x</Text>
-        </View>
+        </View> */}
         {items.map(item => (
-          <View style={styles.menuItemView}>
+          <View key={item.text} style={styles.menuItemView}>
             <Text onPress={() => {item.handler(); onClose(); } } style={styles.menuItemText}>{item.text}</Text>
           </View>
         ))}
+        <View style={styles.menuItemView}>
+          <Text onPress={onClose} style={styles.menuItemText}>Cancel</Text>
+        </View>
       </View>
+      </SafeAreaView>
     </Modal>
   )
 }
 
 const styles = StyleSheet.create({
   menuModal: {
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   menuList: {
-    alignItems: 'center'
+    height: '100%',
+    alignItems: 'center',
+    // justifyContent: 'flex-end',
+    justifyContent: 'center',
   },
   menuItemView: {
     padding: 20,
@@ -48,10 +57,12 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignSelf: 'flex-end',
-    padding: 20
+    padding: 10,
+    backgroundColor: 'red'
   },
   closeButtonText: {
-    fontSize: 20
+    fontSize: 20,
+    color: 'white',
   }
 })
 
