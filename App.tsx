@@ -5,11 +5,32 @@ import HabitListView from './app/HabitListView';
 import HabitDetailView from './app/HabitDetailView';
 import HeaderBar from './app/HeaderBar';
 import { AppContext, makeInitialContextData } from './app/State';
+import Menu from './app/Menu';
 
 export default function App() {
 
   const [selectedHabit, setSelectedHabit] = useState<string | null>(null)
-  
+  const [showMenu, setShowMenu] = useState(false)
+
+  const menuItems = [
+    {
+      text: 'New Habit',
+      handler: () => {}
+    },
+    {
+      text: 'Export data',
+      handler: () => {}
+    },
+    {
+      text: 'Load sample data',
+      handler: () => {}
+    },
+    {
+      text: 'Show archived habits',
+      handler: () => {}
+    },
+  ]
+
   return (
     <AppContext.Provider value={makeInitialContextData()}>
       <SafeAreaView style={styles.safeArea}>
@@ -17,12 +38,14 @@ export default function App() {
           title="Habit Builder"
           showBack={selectedHabit !== null}
           handleBack={() => setSelectedHabit(null)}
+          handleMenu={() => setShowMenu(showMenu => !showMenu)}
           />
         { 
           (selectedHabit) ? 
           <HabitDetailView habitId={selectedHabit}/> : 
           <HabitListView onHabitSelect={setSelectedHabit}/> 
         }
+        <Menu open={showMenu} items={menuItems} onClose={() => { setShowMenu(false) }}/>
       </SafeAreaView>
     </AppContext.Provider>
   );

@@ -4,10 +4,11 @@ import { View, Text, StyleSheet } from 'react-native'
 type HeaderBarProps = {
   title: string
   showBack: boolean,
-  handleBack: () => void
+  handleBack: () => void,
+  handleMenu: () => void
 }
 
-const HeaderBar = ({ title, showBack, handleBack }: HeaderBarProps) => {
+const HeaderBar = ({ title, showBack, handleBack, handleMenu }: HeaderBarProps) => {
   return (
     <View style={styles.headerBar}>
       <View style={styles.backButtonContainer}>
@@ -15,7 +16,7 @@ const HeaderBar = ({ title, showBack, handleBack }: HeaderBarProps) => {
       </View>
       <Text style={styles.headerBarText}>{title}</Text>
       <View style={styles.menuButtonContainer}>
-        <Text style={styles.menuButtonText}>...</Text>
+        <Text onPress={handleMenu} style={styles.menuButtonText}>⋮</Text>
       </View>
     </View>
   )
