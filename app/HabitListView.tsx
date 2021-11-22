@@ -1,6 +1,6 @@
+import { property } from 'lodash';
 import React, { useContext } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
 import { AppContext } from './State';
 import { padding, listItemColors, fontSizes } from './StyleConstants';
@@ -11,13 +11,13 @@ type HabitPropType = {
     habit: Habit,
     color: string,
     onIncrement: () => void
+    onSelect: () => void
 }
 
-const HabitItem = ({ habit, onIncrement, color }: HabitPropType) => {
+const HabitItem = ({ habit, onIncrement, onSelect, color }: HabitPropType) => {
     const style = StyleSheet.compose(styles.habitItem, {'backgroundColor': color})
-    const navigation = useNavigation()
     const handleOnPress = () => {
-        navigation.navigate('HabitDetail', { habitId: habit.id, title: habit.name })
+        onSelect()
     }
     return (
         <View style={style}> 
@@ -38,7 +38,10 @@ const HabitList = ({ children }: HabitListPropType) => {
     )
 }
 
-const HabitListView = () => {
+type  HabitListViewPropType = {
+    onHabitSelect: (habitId: string) => void
+}
+const HabitListView = (props: HabitListViewPropType) => {
     const {habits, incrementHabit} = useContext(AppContext);
     return (
         <View style={styles.habitListView}>
@@ -50,7 +53,8 @@ const HabitListView = () => {
                         <HabitItem 
                             key={habit.id}
                             habit={habit} 
-                            onIncrement={onIncrementHandler} 
+                            onIncrement={onIncrementHandler}
+                            onSelect={() => {props.onHabitSelect(habit.id)}}
                             color={color}/>
                     )
                 })}

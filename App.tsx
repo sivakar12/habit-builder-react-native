@@ -1,39 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, Platform, StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import HabitListView from './app/HabitListView';
 import HabitDetailView from './app/HabitDetailView';
+import HeaderBar from './app/HeaderBar';
 import { AppContext, makeInitialContextData } from './app/State';
 
 export default function App() {
 
-  const Stack = createNativeStackNavigator()
-  Stack.Navigator.defaultProps = {
-    screenOptions: {
-      headerShown: true
-    }
-  }
+  const [selectedHabit, setSelectedHabit] = useState<string | null>(null)
   
   return (
     <AppContext.Provider value={makeInitialContextData()}>
-      <NavigationContainer>
-        <SafeAreaView style={styles.safeArea}>
-          <Stack.Navigator>
-            <Stack.Screen 
-              name="HabitList"
-              component={HabitListView}
-              options={{ title: 'Habits' }}
-            />
-            <Stack.Screen
-              name="HabitDetail"
-              component={HabitDetailView}
-              options={{ title: 'Progress' }}
-            />
-          </Stack.Navigator>
-        </SafeAreaView>
-      </NavigationContainer>
+      <SafeAreaView style={styles.safeArea}>
+        <HeaderBar 
+          title="Habit Builder"
+          showBack={selectedHabit !== null}
+          handleBack={() => setSelectedHabit(null)}
+          />
+        { 
+          (selectedHabit) ? 
+          <HabitDetailView habitId={selectedHabit}/> : 
+          <HabitListView onHabitSelect={setSelectedHabit}/> 
+        }
+      </SafeAreaView>
     </AppContext.Provider>
   );
 }

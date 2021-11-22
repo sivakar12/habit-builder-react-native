@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { View, Text, StyleSheet, FlatList } from 'react-native'
-import { useRoute } from '@react-navigation/core'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
@@ -40,9 +39,11 @@ const LogList = ({ timestampsSortedDown }: LogListProps) => {
         />
     )
 }
-const HabitDetailView = () => {
-    const routeData = useRoute()
-    const habitId = routeData.params?.habitId as Id
+
+type HabitDetailViewPropTypes = {
+    habitId: string
+}
+const HabitDetailView = ({ habitId }: HabitDetailViewPropTypes) => {
     
     const { getHabitById } = useContext(AppContext)
     const habit = getHabitById(habitId)
