@@ -31,7 +31,9 @@ export default function App() {
     },
     {
       text: 'Load sample data',
-      handler: () => {}
+      handler: () => {
+        contextData.loadSampleData()
+      }
     },
     {
       text: 'Show archived habits',

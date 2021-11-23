@@ -1,34 +1,36 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react'
-import initialData from './InitialData'
+import sampleData from './SampleData'
 import { Habit, HabitLog, Id } from './Types'
 
 interface HabitBuilderContext {
     habits: Habit[],
     incrementHabit: (habitId: Id) => void,
-    getHabitById: (habitId: Id) => Habit | null
-    addHabit: (habitName: string) => void
+    getHabitById: (habitId: Id) => Habit | null,
+    addHabit: (habitName: string) => void,
+    loadSampleData: () => void
 }
 
 const AppContext = React.createContext<HabitBuilderContext>({
     habits: [],
     incrementHabit: (habitId: Id) => {},
     getHabitById: (habitId: Id) => null,
-    addHabit: (habitName: string) => {}
+    addHabit: (habitName: string) => {},
+    loadSampleData: () => {}
 });
 
 const makeInitialContextData = () => {
-    const [habits, setHabits] = useState<Habit[]>(initialData)
-    // TODO: Only to work on production. Disable the random generation on prod too
-    // useEffect(() => {
-    //     AsyncStorage.getItem('habitdatalogs').then(dataString => {
-    //         if (dataString) {
-    //             const dataParsed = JSON.parse(dataString) as Habit[]
-    //             setHabits(dataParsed)
-    //         }
-    //     })
-    // }, [])
+    const [habits, setHabits] = useState<Habit[]>([])
+    
+    useEffect(() => {
+        AsyncStorage.getItem('habitdatalogs').then(dataString => {
+            if (dataString) {
+                const dataParsed = JSON.parse(dataString) as Habit[]
+                setHabits(dataParsed)
+            }
+        })
+    }, [])
     useEffect(() => {
         AsyncStorage.setItem('habitdatalogs', JSON.stringify(habits))
             .catch(() => { alert('failure to save')})
@@ -63,7 +65,12 @@ const makeInitialContextData = () => {
         setHabits([...habits, habit])
     }
 
+    const loadSampleData = () => {
+        setHabits(sampleData)
+    }
+
     return {
+        loadSampleData,
         habits,
         incrementHabit,
         getHabitById,
