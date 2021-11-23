@@ -23,21 +23,21 @@ const sampleEndDate = new Date(2021, 10, 3)
 // TODO: Refactor date transformations
 const habits: Habit[] = [
     {
-        id: '1',
+        id: '0',
         name: 'Drink Water',
         createdTime: (new Date()).toISOString(),
         archived: false,
         logs: createRandomDates(sampleStartDate, sampleEndDate, 1000).map(dateToHabitLog)
     },
     {
-        id: '2',
+        id: '1',
         name: 'Do Planks',
         createdTime: (new Date()).toISOString(),
         archived: false,
         logs: createRandomDates(sampleStartDate, sampleEndDate, 500).map(dateToHabitLog)
     },
     {
-        id: '3',
+        id: '2',
         name: 'Meditate',
         createdTime: (new Date()).toISOString(),
         archived: false,

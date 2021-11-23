@@ -97,7 +97,6 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
         setFilterRange([filterDateEnd.startOf(periodType), filterDateEnd.endOf(periodType)])
     }, [periodType])
     
-    console.log(filterDateStart, filterDateEnd)
     const startTimestamp = filterDateStart.toDate().getTime()
     const endTimestamp = filterDateEnd.toDate().getTime()
     
@@ -106,7 +105,6 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
         t < endTimestamp && t > startTimestamp)
     // const filteredTimestamps = timestampsSortedDown
 
-    console.log(startTimestamp, endTimestamp, timestampsSortedDown, filteredTimestamps)
     let labels: string[] | number[];
     let counts: { [label: string | number]: number } = {};
     switch (periodType) {

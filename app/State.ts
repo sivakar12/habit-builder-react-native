@@ -8,12 +8,14 @@ interface HabitBuilderContext {
     habits: Habit[],
     incrementHabit: (habitId: Id) => void,
     getHabitById: (habitId: Id) => Habit | null
+    addHabit: (habitName: string) => void
 }
 
 const AppContext = React.createContext<HabitBuilderContext>({
     habits: [],
     incrementHabit: (habitId: Id) => {},
-    getHabitById: (habitId: Id) => null
+    getHabitById: (habitId: Id) => null,
+    addHabit: (habitName: string) => {}
 });
 
 const makeInitialContextData = () => {
@@ -50,10 +52,22 @@ const makeInitialContextData = () => {
         return habits.filter(h => h.id === habitId)[0]
     }
 
+    const addHabit = (habitName: string) => {
+        const habit: Habit = {
+            id: habits.length.toString(),
+            name: habitName,
+            createdTime: dayjs().toISOString(),
+            archived: false,
+            logs: []
+        }
+        setHabits([...habits, habit])
+    }
+
     return {
         habits,
         incrementHabit,
-        getHabitById
+        getHabitById,
+        addHabit
     }
 }
 

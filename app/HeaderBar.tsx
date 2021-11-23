@@ -12,7 +12,7 @@ const HeaderBar = ({ title, showBack, handleBack, handleMenu }: HeaderBarProps) 
   return (
     <View style={styles.headerBar}>
       <View style={styles.backButtonContainer}>
-        { showBack && <Text onPress={handleBack} style={styles.backButtonText}>&lt;-</Text> }
+        { showBack && <Text onPress={handleBack} style={styles.backButtonText}>&lt;</Text> }
       </View>
       <Text style={styles.headerBarText}>{title}</Text>
       <View style={styles.menuButtonContainer}>
@@ -40,13 +40,14 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center'
   },
   headerBarText: {
-    fontSize: 40
+    fontSize: 40,
+    textAlignVertical: 'center'
   },
   menuButtonContainer: {
-    width: 100
+    // width: 100
   },
   backButtonContainer: {
-    width: 100
+    // width: 100
   }
 })
 

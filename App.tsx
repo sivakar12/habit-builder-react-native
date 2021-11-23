@@ -12,13 +12,15 @@ export default function App() {
   const [selectedHabit, setSelectedHabit] = useState<string | null>(null)
   const [showMenu, setShowMenu] = useState(false)
 
+  const contextData = makeInitialContextData()
+
   const menuItems = [
     {
       text: 'New Habit',
       handler: () => {
         Alert.prompt('Name', 'Enter name of habit', (habitName) => {
           if (habitName) {
-            // TODO: Add to the list in memory
+            contextData.addHabit(habitName)
           }
         })
       }
@@ -38,7 +40,7 @@ export default function App() {
   ]
 
   return (
-    <AppContext.Provider value={makeInitialContextData()}>
+    <AppContext.Provider value={contextData}>
       <SafeAreaView style={styles.safeArea}>
         <HeaderBar 
           title="Habit Builder"
