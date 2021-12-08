@@ -19,7 +19,7 @@ const dateToHabitLog = (date: Date): HabitLog => ({
 })
 
 const sampleStartDate = new Date(2020, 1, 1)
-const sampleEndDate = new Date(2021, 10, 3)
+const sampleEndDate = new Date()
 // TODO: Refactor date transformations
 const habits: Habit[] = [
     {
