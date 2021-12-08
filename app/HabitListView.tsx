@@ -3,24 +3,22 @@ import React, { useContext } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { AppContext } from './State';
-import { padding, listItemColors, fontSizes } from './StyleConstants';
+import { padding, fontSizes } from './StyleConstants';
 import { Habit } from './Types';
 
 type HabitListPropType = { children: React.ReactNode | React.ReactNode[] }
 type HabitPropType = { 
     habit: Habit,
-    color: string,
     onIncrement: () => void
     onSelect: () => void
 }
 
-const HabitItem = ({ habit, onIncrement, onSelect, color }: HabitPropType) => {
-    const style = StyleSheet.compose(styles.habitItem, {'backgroundColor': color})
+const HabitItem = ({ habit, onIncrement, onSelect }: HabitPropType) => {
     const handleOnPress = () => {
         onSelect()
     }
     return (
-        <View style={style}> 
+        <View style={styles.habitItem}> 
             <Text style={styles.habitNameText} onPress={handleOnPress}>{habit.name}</Text>
             <Text style={styles.habitLogCount}>{habit.logs.length}</Text>
             <TouchableOpacity onPress={onIncrement}>
@@ -46,8 +44,7 @@ const HabitListView = (props: HabitListViewPropType) => {
     return (
         <View style={styles.habitListView}>
             <HabitList>
-                {habits.map((habit, i) => {
-                    const color = listItemColors[i % listItemColors.length]
+                {habits.map(habit => {
                     const onIncrementHandler = () => incrementHabit(habit.id)
                     return (
                         <HabitItem 
@@ -55,7 +52,7 @@ const HabitListView = (props: HabitListViewPropType) => {
                             habit={habit} 
                             onIncrement={onIncrementHandler}
                             onSelect={() => {props.onHabitSelect(habit.id)}}
-                            color={color}/>
+                            />
                     )
                 })}
             </HabitList>
