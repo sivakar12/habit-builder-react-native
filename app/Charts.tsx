@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native'
+import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native'
 import dayjs, { Dayjs } from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 import _ from 'lodash'
-import { fontSizes, listItemColors, padding } from './StyleConstants'
-import { VictoryChart, VictoryBar } from "victory-native"
+import { fontSizes, padding } from './StyleConstants'
+import { VictoryChart, VictoryBar, VictoryAxis } from "victory-native"
 enum PeriodType {
     Day = "day",
     Week = "week",
@@ -146,47 +146,23 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
             break
     }
     const chartData = labels.map(label => ({
-        x: label,
+        x: label.toString().substr(0, 3),
         y: counts[label]
     }))
 
+    const chartWidth = Math.max(Dimensions.get('window').width - 40, 600)
     const ChartView = () => 
-        <VictoryChart>
-            <VictoryBar
-                data={chartData}
-                categories={{x: labels.map(s => s.toString())}}
-            />
-        </VictoryChart>
-    // const chartData = {
-    //     labels: labels.map(l => l.toString()),
-    //     datasets: [
-    //         { data: labels.map(l => counts[l]) }
-    //     ]
-    // }
-    // const screenWidth = Dimensions.get('window').width
-    // const chartWidth = screenWidth * 0.8
-    // const chartHeight = 200
-    // const chartConfig = {
-    //     backgroundGradientFrom: listItemColors[0],
-    //     backgroundGradientFromOpacity: 0.5,
-    //     backgroundGradientTo: listItemColors[0],
-    //     backgroundGradientToOpacity: 0.5,
-    //     fillShadowGradient: listItemColors[1],
-    //     fillShadowGradientOpacity: 0.5,
-    //     color: (opacity = 1) => listItemColors[1],
-    //     strokeWidth: 2, // optional, default 3
-    //     barPercentage: 0.5,
-    // }
-    // const ChartView = () => 
-    //     <BarChart 
-    //         data={chartData} 
-    //         width={screenWidth}
-    //         height={chartHeight}
-    //         chartConfig={chartConfig}
-    //         yAxisLabel={''}
-    //         xAxisLabel={''}
-    //         yAxisSuffix={''}
-    //     />
+        <ScrollView horizontal>
+            <VictoryChart width={chartWidth} domainPadding={10}>
+                <VictoryBar
+                    data={chartData}
+                    categories={{x: labels.map(s => s.toString().substring(0, 3))}}
+                    minDomain={{x: 0}}
+                />
+                <VictoryAxis/>
+            </VictoryChart>
+        </ScrollView>
+
     return (
         <View style={styles.chartContainer}>
             <PeriodChooser 
@@ -208,7 +184,7 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
 
 const styles = StyleSheet.create({
     chartContainer: {
-        alignContent: 'stretch'
+        alignContent: 'center'
     },
     chooser: {
         flexDirection: 'row',
