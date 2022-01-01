@@ -5,7 +5,7 @@ module.exports = async function (env, argv) {
   // Customize the config before returning it.
   // Use babel specifically on victory-native files
   config.module.rules.push({
-    test: /.*victory-native\/.*\.js/,
+    test: /.*victory-native[\/\\].*\.js/,
     use: {
       loader: 'babel-loader'
     }
