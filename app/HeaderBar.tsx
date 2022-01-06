@@ -43,7 +43,8 @@ const styles = StyleSheet.create({
   },
   headerBarText: {
     fontSize: 40,
-    textAlignVertical: 'center'
+    textAlignVertical: 'center',
+    fontFamily: 'PatuaOne_400Regular'
   },
   menuButtonContainer: {
     // width: 100

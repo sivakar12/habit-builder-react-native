@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     },
     habitLogCount: {
         padding: padding,
+        fontFamily: 'PatuaOne_400Regular',
         fontSize: fontSizes[1],
         paddingHorizontal: padding,
         fontWeight: 'bold',
@@ -88,6 +89,7 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     habitNameText: {
+        fontFamily: 'PatuaOne_400Regular',
         fontSize: fontSizes[1],
         flexGrow: 1,
         color: 'white'

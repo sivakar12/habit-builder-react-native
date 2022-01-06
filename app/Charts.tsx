@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     chooserValueText: {
+        fontFamily: 'PatuaOne_400Regular',
         fontSize: fontSizes[1],
         padding: padding
     },
@@ -200,9 +201,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     periodChangerArrow: {
+        fontFamily: 'PatuaOne_400Regular',
         fontSize: fontSizes[1]
     },
     periodChangerDisplay: {
+        fontFamily: 'PatuaOne_400Regular',
         fontSize: fontSizes[1],
     }
 })

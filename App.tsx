@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, Platform, StatusBar, Alert } from 'react-native';
+import AppLoading from 'expo-app-loading';
+import { useFonts, PatuaOne_400Regular } from '@expo-google-fonts/patua-one';
 
 import HabitListView from './app/HabitListView';
 import HabitDetailView from './app/HabitDetailView';
@@ -41,6 +43,10 @@ export default function App() {
     },
   ]
 
+  let [fontsLoaded] = useFonts({PatuaOne_400Regular})
+  if (!fontsLoaded) {
+    return <AppLoading/>
+  }
   return (
     <AppContext.Provider value={contextData}>
       <SafeAreaView style={styles.safeArea}>

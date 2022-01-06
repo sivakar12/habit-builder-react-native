@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
         alignItems: 'stretch'
     },
     bigNumber: {
+        fontFamily: 'PatuaOne_400Regular',
         fontSize: 100,
         display: 'flex',
         justifyContent: 'center',
@@ -81,6 +82,7 @@ const styles = StyleSheet.create({
     habitName: {
         display: 'flex',
         justifyContent: 'center',
+        fontFamily: 'PatuaOne_400Regular',
         fontSize: fontSizes[0],
         backgroundColor: colorPalette[1],
         color: 'white'
@@ -95,6 +97,7 @@ const styles = StyleSheet.create({
     },
     logListItemText: {
         fontSize: fontSizes[1],
+        fontFamily: 'PatuaOne_400Regular',
         paddingHorizontal: padding,
     }
 })
