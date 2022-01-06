@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo-google-fonts/passion-one": "^0.2.0",
     "@expo-google-fonts/patua-one": "^0.2.0",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "dayjs": "^1.10.7",

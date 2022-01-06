@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, Platform, StatusBar, Alert } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { useFonts, PatuaOne_400Regular } from '@expo-google-fonts/patua-one';
+import { useFonts as useFonts2, PassionOne_400Regular } from '@expo-google-fonts/passion-one';
 
 import HabitListView from './app/HabitListView';
 import HabitDetailView from './app/HabitDetailView';
@@ -51,7 +52,8 @@ export default function App() {
   ]
 
   let [fontsLoaded] = useFonts({PatuaOne_400Regular})
-  if (!fontsLoaded) {
+  let [fontsLoaded2] = useFonts2({PassionOne_400Regular})
+  if (!(fontsLoaded && fontsLoaded2)) {
     return <AppLoading/>
   }
   return (

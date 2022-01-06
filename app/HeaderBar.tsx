@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
   headerBarText: {
     fontSize: 40,
     textAlignVertical: 'center',
-    fontFamily: 'PatuaOne_400Regular'
+    fontFamily: 'PassionOne_400Regular',
+    color: 'white'
   },
   menuButtonContainer: {
     // width: 100
