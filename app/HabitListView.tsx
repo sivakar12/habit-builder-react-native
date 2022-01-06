@@ -5,20 +5,23 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { AppContext } from './State';
 import { padding, fontSizes } from './StyleConstants';
 import { Habit } from './Types';
+import { colorPalette } from './StyleConstants';
 
 type HabitListPropType = { children: React.ReactNode | React.ReactNode[] }
 type HabitPropType = { 
     habit: Habit,
-    onIncrement: () => void
-    onSelect: () => void
+    onIncrement: () => void,
+    onSelect: () => void,
+    index: number
 }
 
-const HabitItem = ({ habit, onIncrement, onSelect }: HabitPropType) => {
+const HabitItem = ({ habit, onIncrement, onSelect, index }: HabitPropType) => {
     const handleOnPress = () => {
         onSelect()
     }
+    const color = index % 2 == 0 ? colorPalette[2] : colorPalette[4]
     return (
-        <View style={styles.habitItem}> 
+        <View style={StyleSheet.compose(styles.habitItem, {backgroundColor: color})}> 
             <Text style={styles.habitNameText} onPress={handleOnPress}>{habit.name}</Text>
             <Text style={styles.habitLogCount}>{habit.logs.length}</Text>
             <TouchableOpacity onPress={onIncrement}>
@@ -44,7 +47,7 @@ const HabitListView = (props: HabitListViewPropType) => {
     return (
         <View style={styles.habitListView}>
             <HabitList>
-                {habits.map(habit => {
+                {habits.map((habit, index) => {
                     const onIncrementHandler = () => incrementHabit(habit.id)
                     return (
                         <HabitItem 
@@ -52,6 +55,7 @@ const HabitListView = (props: HabitListViewPropType) => {
                             habit={habit} 
                             onIncrement={onIncrementHandler}
                             onSelect={() => {props.onHabitSelect(habit.id)}}
+                            index={index}
                             />
                     )
                 })}
@@ -65,7 +69,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: padding,
-        fontSize: fontSizes[1]
+        fontSize: fontSizes[1],
     },
     habitList: {
         flex: 1,
@@ -74,16 +78,19 @@ const styles = StyleSheet.create({
         padding: padding,
         fontSize: fontSizes[1],
         paddingHorizontal: padding,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: 'white'
     },
     habitIncrementButton: {
         backgroundColor: '#fff0',
         fontSize: fontSizes[1],
-        paddingHorizontal: padding
+        paddingHorizontal: padding,
+        color: 'white'
     },
     habitNameText: {
         fontSize: fontSizes[1],
-        flexGrow: 1
+        flexGrow: 1,
+        color: 'white'
     },
     habitListView: {
         flex: 1

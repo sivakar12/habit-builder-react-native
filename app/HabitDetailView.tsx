@@ -7,7 +7,7 @@ dayjs.extend(relativeTime)
 dayjs.extend(localizedFormat)
 
 import { AppContext } from './State';
-import { fontSizes, padding } from './StyleConstants';
+import { colorPalette, fontSizes, padding } from './StyleConstants';
 import { HabitLog } from './Types';
 import Charts from './Charts'
 
@@ -33,6 +33,7 @@ const LogListItem = ({ millisecond }: { millisecond: number}) => {
 const LogList = ({ timestampsSortedDown }: LogListProps) => {
     return (
         <FlatList
+            style={styles.logList}
             data={timestampsSortedDown}
             renderItem={({item}) => <LogListItem millisecond={item}/>}
             keyExtractor={ms => ms.toString()}
@@ -55,10 +56,10 @@ const HabitDetailView = ({ habitId }: HabitDetailViewPropTypes) => {
 
     return (
         <View style={styles.detailScreen}>
+            <Text style={styles.habitName}>{habit.name}</Text>
             <Text style={styles.bigNumber}>
                 {habit.logs.length}
             </Text>
-            <Text style={styles.habitName}>{habit.name}</Text>
             <Charts timestampsSortedDown={timestampsSortedDown}/>
             <LogList timestampsSortedDown={timestampsSortedDown}/>
         </View>
@@ -68,17 +69,24 @@ const HabitDetailView = ({ habitId }: HabitDetailViewPropTypes) => {
 const styles = StyleSheet.create({
     detailScreen: {
         flex: 1,
-        alignItems: 'center'
+        alignItems: 'stretch'
     },
     bigNumber: {
-        fontSize: 100
+        fontSize: 100,
+        display: 'flex',
+        justifyContent: 'center',
+        backgroundColor: colorPalette[2],
+        color: 'white'
     },
     habitName: {
+        display: 'flex',
+        justifyContent: 'center',
         fontSize: fontSizes[0],
-        alignSelf: 'center'
+        backgroundColor: colorPalette[1],
+        color: 'white'
     },
     logList: {
-
+        backgroundColor: colorPalette[3]
     },
     logListItem: {
         flexDirection: 'row',
@@ -87,7 +95,7 @@ const styles = StyleSheet.create({
     },
     logListItemText: {
         fontSize: fontSizes[1],
-        paddingHorizontal: padding
+        paddingHorizontal: padding,
     }
 })
 

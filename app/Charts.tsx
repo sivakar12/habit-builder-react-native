@@ -4,7 +4,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 import _ from 'lodash'
-import { fontSizes, padding } from './StyleConstants'
+import { colorPalette, fontSizes, padding } from './StyleConstants'
 import { VictoryChart, VictoryBar, VictoryAxis } from "victory-native"
 enum PeriodType {
     Day = "day",
@@ -184,7 +184,8 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
 
 const styles = StyleSheet.create({
     chartContainer: {
-        alignContent: 'center'
+        alignContent: 'center',
+        backgroundColor: colorPalette[4]
     },
     chooser: {
         flexDirection: 'row',

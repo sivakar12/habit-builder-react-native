@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import { colorPalette } from './StyleConstants'
 
 type HeaderBarProps = {
   title: string
@@ -27,7 +28,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'space-between',
-    width: '100%'
+    width: '100%',
+    backgroundColor: colorPalette[0]
   },
   backButtonText: {
     fontSize: 40,
