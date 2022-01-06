@@ -26,24 +26,26 @@ const HeaderBar = ({ title, showBack, handleBack, handleMenu }: HeaderBarProps) 
 const styles = StyleSheet.create({
   headerBar: {
     flexDirection: 'row',
-    alignContent: 'center',
+    alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    backgroundColor: colorPalette[0]
+    backgroundColor: colorPalette[0],
+    paddingHorizontal: 10
   },
   backButtonText: {
     fontSize: 40,
     textAlign: 'center',
-    textAlignVertical: 'center'
+    fontFamily: 'PassionOne_400Regular',
+    color: 'white'
   },
   menuButtonText: {
     fontSize: 40,
     textAlign: 'center',
-    textAlignVertical: 'center'
+    fontFamily: 'PassionOne_400Regular',
+    color: 'white'
   },
   headerBarText: {
     fontSize: 40,
-    textAlignVertical: 'center',
     fontFamily: 'PassionOne_400Regular',
     color: 'white'
   },

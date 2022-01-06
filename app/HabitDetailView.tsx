@@ -74,14 +74,12 @@ const styles = StyleSheet.create({
     bigNumber: {
         fontFamily: 'PatuaOne_400Regular',
         fontSize: 100,
-        display: 'flex',
-        justifyContent: 'center',
+        textAlign: 'center',
         backgroundColor: colorPalette[2],
         color: 'white'
     },
     habitName: {
-        display: 'flex',
-        justifyContent: 'center',
+        textAlign: 'center',
         fontFamily: 'PatuaOne_400Regular',
         fontSize: fontSizes[0],
         backgroundColor: colorPalette[1],

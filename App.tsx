@@ -9,6 +9,7 @@ import HabitDetailView from './app/HabitDetailView';
 import HeaderBar from './app/HeaderBar';
 import { AppContext, makeInitialContextData } from './app/State';
 import Menu from './app/Menu';
+import { colorPalette } from './app/StyleConstants';
 
 export default function App() {
 
@@ -79,6 +80,7 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    backgroundColor: colorPalette[0]
   }
 })
