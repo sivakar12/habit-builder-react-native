@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, Modal, SafeAreaView } from 'react-native'
+import { colorPalette } from './StyleConstants'
 
 type MenuItem = {
   text: string,
@@ -41,6 +42,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   menuList: {
+    backgroundColor: colorPalette[0],
     height: '100%',
     alignItems: 'center',
     // justifyContent: 'flex-end',
@@ -53,6 +55,7 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     fontSize: 20,
+    fontFamily: 'PatuaOne_400Regular',
     textAlign: 'center'
   },
   closeButton: {
