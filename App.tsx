@@ -20,11 +20,18 @@ export default function App() {
     {
       text: 'New Habit',
       handler: () => {
-        Alert.prompt('Name', 'Enter name of habit', (habitName) => {
+        if (Platform.OS === 'web') {
+          const habitName = prompt('Enter name of new habit')
           if (habitName) {
             contextData.addHabit(habitName)
           }
-        })
+        } else {
+          Alert.prompt('Name', 'Enter name of habit', (habitName) => {
+            if (habitName) {
+              contextData.addHabit(habitName)
+            }
+          })
+        }
       }
     },
     {
