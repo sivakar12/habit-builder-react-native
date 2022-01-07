@@ -13,11 +13,13 @@ import HeaderBar from './app/HeaderBar';
 import { AppContext, makeInitialContextData } from './app/State';
 import Menu from './app/Menu';
 import { colorPalette } from './app/StyleConstants';
+import NewHabitDialog from './app/NewHabitDialog';
 
 export default function App() {
 
   const [selectedHabit, setSelectedHabit] = useState<string | null>(null)
   const [showArchives, setShowArchives] = useState(false)
+  const [showNewHabitDialog, setShowNewHabitDialog] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
 
   const contextData = makeInitialContextData()
@@ -31,12 +33,8 @@ export default function App() {
           if (habitName) {
             contextData.addHabit(habitName)
           }
-        } else {
-          Alert.prompt('Name', 'Enter name of habit', (habitName) => {
-            if (habitName) {
-              contextData.addHabit(habitName);
-            }
-          })
+        } else if (Platform.OS === 'ios' || Platform.OS == 'android') {
+          setShowNewHabitDialog(true)
         }
         return Promise.resolve()
       }
@@ -134,6 +132,11 @@ export default function App() {
           open={showMenu} 
           items={selectedHabit ? habitDetailMenuItems : mainMenuItems} 
           onClose={() => { setShowMenu(false) }}
+        />
+        <NewHabitDialog
+          onSubmit={(habitName) => {contextData.addHabit(habitName); setShowNewHabitDialog(false)}}
+          onDismiss={() => { setShowNewHabitDialog(false) }}
+          visible={showNewHabitDialog}
         />
       </SafeAreaView>
     </AppContext.Provider>
