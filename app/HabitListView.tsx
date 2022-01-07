@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     habitIncrementButton: {
         backgroundColor: '#fff0',
         fontSize: fontSizes[1],
+        fontFamily: 'PatuaOne_400Regular',
         paddingHorizontal: padding,
         color: 'white'
     },
