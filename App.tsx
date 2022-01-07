@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, Platform, StatusBar, Alert } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, StatusBar, Alert, Share } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { useFonts, PatuaOne_400Regular } from '@expo-google-fonts/patua-one';
 import { useFonts as useFonts2, PassionOne_400Regular } from '@expo-google-fonts/passion-one';
+import * as FileSystem from 'expo-file-system';
 
 import HabitListView from './app/HabitListView';
 import HabitDetailView from './app/HabitDetailView';
@@ -30,7 +31,7 @@ export default function App() {
         } else {
           Alert.prompt('Name', 'Enter name of habit', (habitName) => {
             if (habitName) {
-              contextData.addHabit(habitName)
+              contextData.addHabit(habitName);
             }
           })
         }
@@ -38,7 +39,17 @@ export default function App() {
     },
     {
       text: 'Export data',
-      handler: () => {}
+      handler: () => {
+        const timeString = new Date().toISOString();
+        const fileUri = FileSystem.cacheDirectory + 'habitsbuilderdata-' + timeString + '.json';
+        Alert.alert('Data exported in JSON format');
+        FileSystem.writeAsStringAsync(
+          fileUri, JSON.stringify(contextData.habits, null, 2))
+        .then(() => {
+          Share.share({ url: fileUri});
+        })
+        .catch(error => { Alert.alert(error.message); })
+      }
     },
     {
       text: 'Load sample data',
