@@ -7,7 +7,10 @@ import { padding, fontSizes } from './StyleConstants';
 import { Habit } from './Types';
 import { colorPalette } from './StyleConstants';
 
-type HabitListPropType = { children: React.ReactNode | React.ReactNode[] }
+type HabitListPropType = { 
+    children: React.ReactNode | React.ReactNode[],
+}
+
 type HabitPropType = { 
     habit: Habit,
     onIncrement: () => void,
@@ -20,9 +23,10 @@ const HabitItem = ({ habit, onIncrement, onSelect, index }: HabitPropType) => {
         onSelect()
     }
     const color = index % 2 == 0 ? colorPalette[2] : colorPalette[4]
+    const habitNameDisplay = habit.archived ? `${habit.name} (archived)` : habit.name
     return (
         <View style={StyleSheet.compose(styles.habitItem, {backgroundColor: color})}> 
-            <Text style={styles.habitNameText} onPress={handleOnPress}>{habit.name}</Text>
+            <Text style={styles.habitNameText} onPress={handleOnPress}>{habitNameDisplay}</Text>
             <Text style={styles.habitLogCount}>{habit.logs.length}</Text>
             <TouchableOpacity onPress={onIncrement}>
                 <Text style={styles.habitIncrementButton}>+</Text>
@@ -40,14 +44,16 @@ const HabitList = ({ children }: HabitListPropType) => {
 }
 
 type  HabitListViewPropType = {
-    onHabitSelect: (habitId: string) => void
+    onHabitSelect: (habitId: string) => void,
+    showArchives: boolean
 }
 const HabitListView = (props: HabitListViewPropType) => {
     const {habits, incrementHabit} = useContext(AppContext);
+    const habitsToDisplay = props.showArchives ? habits : habits.filter(habit => !habit.archived)
     return (
         <View style={styles.habitListView}>
             <HabitList>
-                {habits.map((habit, index) => {
+                {habitsToDisplay.map((habit, index) => {
                     const onIncrementHandler = () => incrementHabit(habit.id)
                     return (
                         <HabitItem 

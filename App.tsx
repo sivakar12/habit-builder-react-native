@@ -17,11 +17,12 @@ import { colorPalette } from './app/StyleConstants';
 export default function App() {
 
   const [selectedHabit, setSelectedHabit] = useState<string | null>(null)
+  const [showArchives, setShowArchives] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
 
   const contextData = makeInitialContextData()
 
-  const menuItems = [
+  const mainMenuItems = [
     {
       text: 'New Habit',
       handler: () => {
@@ -84,12 +85,31 @@ export default function App() {
       }
     },
     {
-      text: 'Show archived habits',
+      text: (showArchives ? 'Hide' : 'Show') + ' archived habits',
       handler: () => {
+        setShowArchives(showArchives => !showArchives)
         return Promise.resolve()
       }
     },
   ]
+
+  const habitDetailMenuItems =  selectedHabit ? [
+    {
+      text: contextData.getHabitById(selectedHabit).archived ? 'Unarchive':  'Archive',
+      handler: () => {
+        contextData.toggleArchiveForHabit(selectedHabit);
+        return Promise.resolve()
+      }
+    },
+    {
+      text: 'Delete',
+      handler: () => {
+        contextData.deleteHabit(selectedHabit);
+        setSelectedHabit(null);
+        return Promise.resolve()
+      }
+    }
+  ]: [];
 
   let [fontsLoaded] = useFonts({PatuaOne_400Regular})
   let [fontsLoaded2] = useFonts2({PassionOne_400Regular})
@@ -108,9 +128,13 @@ export default function App() {
         { 
           (selectedHabit) ? 
           <HabitDetailView habitId={selectedHabit}/> : 
-          <HabitListView onHabitSelect={setSelectedHabit}/> 
+          <HabitListView onHabitSelect={setSelectedHabit} showArchives={showArchives}/> 
         }
-        <Menu open={showMenu} items={menuItems} onClose={() => { setShowMenu(false) }}/>
+        <Menu
+          open={showMenu} 
+          items={selectedHabit ? habitDetailMenuItems : mainMenuItems} 
+          onClose={() => { setShowMenu(false) }}
+        />
       </SafeAreaView>
     </AppContext.Provider>
   );

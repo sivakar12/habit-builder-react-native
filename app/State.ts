@@ -9,6 +9,8 @@ interface HabitBuilderContext {
     incrementHabit: (habitId: Id) => void,
     getHabitById: (habitId: Id) => Habit | null,
     addHabit: (habitName: string) => void,
+    deleteHabit: (habitId: Id) => void,
+    toggleArchiveForHabit: (habitId: Id) => void,
     loadSampleData: () => void
 }
 
@@ -17,6 +19,8 @@ const AppContext = React.createContext<HabitBuilderContext>({
     incrementHabit: (habitId: Id) => {},
     getHabitById: (habitId: Id) => null,
     addHabit: (habitName: string) => {},
+    deleteHabit: (habitId: Id) => {},
+    toggleArchiveForHabit: (habitId: Id) => {},
     loadSampleData: () => {}
 });
 
@@ -65,6 +69,23 @@ const makeInitialContextData = () => {
         setHabits([...habits, habit])
     }
 
+    const deleteHabit = (habitId: Id) => {
+        const newHabits = habits.filter(h => h.id !== habitId);
+        setHabits(newHabits)
+    }
+
+    const toggleArchiveForHabit = (habitId: Id) => {
+        const newHabits = habits.map(habit => {
+            if (habit.id === habitId) {
+                return {...habit, archived: !habit.archived}
+            } else {
+                return habit
+            }
+        })
+        setHabits(newHabits);
+    }
+
+
     const loadSampleData = () => {
         setHabits(sampleData)
     }
@@ -75,7 +96,9 @@ const makeInitialContextData = () => {
         incrementHabit,
         getHabitById,
         addHabit,
-        setHabits
+        setHabits,
+        deleteHabit,
+        toggleArchiveForHabit
     }
 }
 
