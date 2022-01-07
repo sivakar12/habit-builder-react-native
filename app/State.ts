@@ -74,7 +74,8 @@ const makeInitialContextData = () => {
         habits,
         incrementHabit,
         getHabitById,
-        addHabit
+        addHabit,
+        setHabits
     }
 }
 

@@ -4,7 +4,7 @@ import { colorPalette } from './StyleConstants'
 
 type MenuItem = {
   text: string,
-  handler: () => void
+  handler: () => Promise<any>
 }
 
 type MenuProps = {
@@ -23,7 +23,12 @@ const Menu = ({ open, items, onClose }: MenuProps) => {
         </View> */}
         {items.map(item => (
           <View key={item.text} style={styles.menuItemView}>
-            <Text onPress={() => {item.handler(); onClose(); } } style={styles.menuItemText}>{item.text}</Text>
+            <Text 
+              onPress={() => {item.handler().then(onClose).catch(onClose); } } 
+              style={styles.menuItemText}
+            >
+              {item.text}
+            </Text>
           </View>
         ))}
         <View style={styles.menuItemView}>

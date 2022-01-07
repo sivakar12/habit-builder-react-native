@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, Platform, StatusBar, Alert, Share } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, StatusBar, Alert } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { useFonts, PatuaOne_400Regular } from '@expo-google-fonts/patua-one';
 import { useFonts as useFonts2, PassionOne_400Regular } from '@expo-google-fonts/passion-one';
 import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import * as DocumentPicker from 'expo-document-picker';
 
 import HabitListView from './app/HabitListView';
 import HabitDetailView from './app/HabitDetailView';
@@ -35,6 +37,7 @@ export default function App() {
             }
           })
         }
+        return Promise.resolve()
       }
     },
     {
@@ -42,24 +45,49 @@ export default function App() {
       handler: () => {
         const timeString = new Date().toISOString();
         const fileUri = FileSystem.cacheDirectory + 'habitsbuilderdata-' + timeString + '.json';
-        Alert.alert('Data exported in JSON format');
-        FileSystem.writeAsStringAsync(
-          fileUri, JSON.stringify(contextData.habits, null, 2))
-        .then(() => {
-          Share.share({ url: fileUri});
-        })
-        .catch(error => { Alert.alert(error.message); })
+        return FileSystem.writeAsStringAsync(
+              fileUri, JSON.stringify(contextData.habits, null, 2))
+          .then(Sharing.isAvailableAsync)
+          .then(isAvailable => {
+            if (isAvailable) {
+              return Sharing.shareAsync(fileUri);
+            }
+          })
+          .catch(error => { Alert.alert(error.message); })
+      }
+    },
+    {
+      text: 'Import data',
+      handler: () => {
+        return DocumentPicker.getDocumentAsync()
+          .then(result => {
+            if (result.type == 'success') {
+              // read file and parse JSON
+              FileSystem.readAsStringAsync(result.uri)
+              .then(fileContents => {
+                const readHabits = JSON.parse(fileContents);
+                contextData.setHabits(readHabits);
+                Alert.alert('Habit data imported form file');
+              })
+            } else if (result.type == 'cancel') {
+              // Alert.alert('Import cancelled');
+            }
+          })
+          .catch(error => { console.log(error.message); Alert.alert(error.message); })
       }
     },
     {
       text: 'Load sample data',
       handler: () => {
         contextData.loadSampleData()
+        return Promise.resolve()
       }
     },
     {
       text: 'Show archived habits',
-      handler: () => {}
+      handler: () => {
+        return Promise.resolve()
+      }
     },
   ]
 
