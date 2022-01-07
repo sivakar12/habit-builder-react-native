@@ -1,6 +1,6 @@
 import { property } from 'lodash';
 import React, { useContext } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { AppContext } from './State';
 import { padding, fontSizes } from './StyleConstants';
@@ -51,7 +51,7 @@ const HabitListView = (props: HabitListViewPropType) => {
     const {habits, incrementHabit} = useContext(AppContext);
     const habitsToDisplay = props.showArchives ? habits : habits.filter(habit => !habit.archived)
     return (
-        <View style={styles.habitListView}>
+        <ScrollView style={styles.habitListView}>
             <HabitList>
                 {habitsToDisplay.map((habit, index) => {
                     const onIncrementHandler = () => incrementHabit(habit.id)
@@ -66,7 +66,7 @@ const HabitListView = (props: HabitListViewPropType) => {
                     )
                 })}
             </HabitList>
-        </View>
+        </ScrollView>
     ) 
 }
 const styles = StyleSheet.create({
