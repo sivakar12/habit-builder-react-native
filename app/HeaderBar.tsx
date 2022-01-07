@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { colorPalette } from './StyleConstants'
 
 type HeaderBarProps = {
@@ -12,13 +12,13 @@ type HeaderBarProps = {
 const HeaderBar = ({ title, showBack, handleBack, handleMenu }: HeaderBarProps) => {
   return (
     <View style={styles.headerBar}>
-      <View style={styles.backButtonContainer}>
-        { showBack && <Text onPress={handleBack} style={styles.backButtonText}>&lt;</Text> }
-      </View>
+      <TouchableOpacity onPress={handleBack} style={styles.backButtonContainer}>
+        { showBack && <Text style={styles.backButtonText}>&lt;</Text> }
+      </TouchableOpacity>
       <Text style={styles.headerBarText}>{title}</Text>
-      <View style={styles.menuButtonContainer}>
-        <Text onPress={handleMenu} style={styles.menuButtonText}>⋮</Text>
-      </View>
+      <TouchableOpacity onPress={handleMenu} style={styles.menuButtonContainer}>
+        <Text style={styles.menuButtonText}>⋮</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -50,10 +50,11 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   menuButtonContainer: {
-    // width: 100
+    width: 50,
   },
   backButtonContainer: {
-    // width: 100
+    width: 50,
+
   }
 })
 
