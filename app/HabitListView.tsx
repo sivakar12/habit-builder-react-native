@@ -19,14 +19,11 @@ type HabitPropType = {
 }
 
 const HabitItem = ({ habit, onIncrement, onSelect, index }: HabitPropType) => {
-    const handleOnPress = () => {
-        onSelect()
-    }
     const color = index % 2 == 0 ? colorPalette[2] : colorPalette[4]
     const habitNameDisplay = habit.archived ? `${habit.name} (archived)` : habit.name
     return (
         <View style={StyleSheet.compose(styles.habitItem, {backgroundColor: color})}> 
-            <TouchableOpacity onPress={handleOnPress} style={styles.habitNameContainer}>
+            <TouchableOpacity onPress={onSelect} style={styles.habitNameContainer}>
                 <Text style={styles.habitNameText}>{habitNameDisplay}</Text>
             </TouchableOpacity>
             <Text style={styles.habitLogCount}>{habit.logs.length}</Text>
