@@ -13,7 +13,7 @@ import HeaderBar from './app/HeaderBar';
 import { AppContext, makeInitialContextData } from './app/State';
 import Menu from './app/Menu';
 import { colorPalette } from './app/StyleConstants';
-import { NewHabitDialog, RenameHabitDialog } from './app/DialogBoxes';
+import { DeleteConfirmationDialog, NewHabitDialog, RenameHabitDialog } from './app/DialogBoxes';
 import { Rect } from 'victory-native';
 
 export default function App() {
@@ -113,7 +113,7 @@ export default function App() {
         }
         const DialogBox = () =>
             <RenameHabitDialog oldName={oldName} onSubmit={renameHandler} onDismiss={() => setDialogBoxToShow(null)} />
-          setDialogBoxToShow(DialogBox)
+        setDialogBoxToShow(DialogBox)
         return Promise.resolve()
       }
     },
@@ -127,8 +127,13 @@ export default function App() {
     {
       text: 'Delete',
       handler: () => {
-        contextData.deleteHabit(selectedHabit);
-        setSelectedHabit(null);
+        const deleteHandler = () => {
+          contextData.deleteHabit(selectedHabit)
+          setDialogBoxToShow(null)
+          setSelectedHabit(null)
+        }
+        const DialogBox = () => <DeleteConfirmationDialog onSubmit={deleteHandler} onDismiss={() => setDialogBoxToShow(null)} />
+        setDialogBoxToShow(DialogBox)
         return Promise.resolve()
       }
     }

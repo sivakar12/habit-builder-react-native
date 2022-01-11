@@ -46,4 +46,24 @@ const RenameHabitDialog = ({ oldName, onDismiss, onSubmit }: RenameHabitDialogPr
     )
 }
 
-export { NewHabitDialog, RenameHabitDialog };
+type DeleteConfirmationDialogProps = {
+    onSubmit: () => void,
+    onDismiss: () => void,
+}
+
+const DeleteConfirmationDialog = ({ onDismiss, onSubmit }: DeleteConfirmationDialogProps) => {
+    return (
+        <View>
+            <Dialog.Container visible={true}>
+                <Dialog.Title>Delete Habit</Dialog.Title>
+                <Dialog.Description>
+                    Are you sure you want to delete this habit?
+                </Dialog.Description>
+                <Dialog.Button onPress={onDismiss} label="Cancel" />
+                <Dialog.Button onPress={onSubmit} label="Delete" />
+            </Dialog.Container>
+        </View>
+    )
+}
+
+export { NewHabitDialog, RenameHabitDialog, DeleteConfirmationDialog };
