@@ -1,6 +1,7 @@
 import { property } from 'lodash';
 import React, { useContext } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Platform } from 'react-native';
+import * as Haptics from 'expo-haptics';
 
 import { AppContext } from './State';
 import { padding, fontSizes } from './StyleConstants';
@@ -48,12 +49,18 @@ type  HabitListViewPropType = {
 }
 const HabitListView = (props: HabitListViewPropType) => {
     const {habits, incrementHabit} = useContext(AppContext);
-    const habitsToDisplay = props.showArchives ? habits : habits.filter(habit => !habit.archived)
+    const habitsToDisplay = props.showArchives ? 
+        habits : habits.filter(habit => !habit.archived)
     return (
         <ScrollView style={styles.habitListView}>
             <HabitList>
                 {habitsToDisplay.map((habit, index) => {
-                    const onIncrementHandler = () => incrementHabit(habit.id)
+                    const onIncrementHandler = () => {
+                        incrementHabit(habit.id)
+                        if (Platform.OS === 'android' || Platform.OS === 'ios') {
+                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+                        }
+                    }
                     return (
                         <HabitItem 
                             key={habit.id}
