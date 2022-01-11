@@ -15,17 +15,17 @@ enum PeriodType {
 
 type PeriodChooserPropType = {
     periodType: PeriodType,
-    onChange: (peroidType: PeriodType) => void
+    onSelectPeriodType: (peroidType: PeriodType) => void
 }
-const PeriodChooser = ({ periodType: selectedPeriodType, onChange}: PeriodChooserPropType) => {
+const PeriodChooser = ({ periodType: selectedPeriodType, onSelectPeriodType}: PeriodChooserPropType) => {
     return (
         <View style={styles.chooser}>
             {Object.values(PeriodType).map(periodType => {
                 const selected = selectedPeriodType == periodType
                 const style = selected ? 
-                    StyleSheet.compose(styles.chooserValueText, {fontWeight: "bold"}) :
+                    StyleSheet.compose(styles.chooserValueText, {textDecorationLine: 'underline'}) :
                     styles.chooserValueText
-                const onPressHandler = () => { onChange(periodType) }
+                const onPressHandler = () => { onSelectPeriodType(periodType) }
                 return (
                     <Text style={style} key={periodType} onPress={onPressHandler}>
                         {periodType}
@@ -162,12 +162,19 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
                 <VictoryAxis/>
             </VictoryChart>
         </ScrollView>
+    const handlePeriodTypeClick = (newPeriodType: PeriodType) => {
+        // Second click is to go to the current period
+        if (periodType === newPeriodType) {
+            setFilterRange([initialStartDate, initialEndDate])
+        }
+        setPeriodType(newPeriodType)
+    }
 
     return (
         <View style={styles.chartContainer}>
             <PeriodChooser 
                 periodType={periodType}
-                onChange={setPeriodType}
+                onSelectPeriodType={handlePeriodTypeClick}
             />
             <PeriodChanger
                 periodType={periodType}
