@@ -13,13 +13,14 @@ import HeaderBar from './app/HeaderBar';
 import { AppContext, makeInitialContextData } from './app/State';
 import Menu from './app/Menu';
 import { colorPalette } from './app/StyleConstants';
-import NewHabitDialog from './app/NewHabitDialog';
+import { NewHabitDialog, RenameHabitDialog } from './app/DialogBoxes';
+import { Rect } from 'victory-native';
 
 export default function App() {
 
   const [selectedHabit, setSelectedHabit] = useState<string | null>(null)
   const [showArchives, setShowArchives] = useState(false)
-  const [showNewHabitDialog, setShowNewHabitDialog] = useState(false)
+  const [DialogBoxToShow, setDialogBoxToShow] = useState<React.FunctionComponent | null>(null)
   const [showMenu, setShowMenu] = useState(false)
 
   const contextData = makeInitialContextData()
@@ -34,7 +35,15 @@ export default function App() {
             contextData.addHabit(habitName)
           }
         } else if (Platform.OS === 'ios' || Platform.OS == 'android') {
-          setShowNewHabitDialog(true)
+          const handleSubmit = (habitName: string) => {
+            if (habitName.length > 0) {
+              contextData.addHabit(habitName)
+            }
+            setDialogBoxToShow(null)
+          }
+          const DialogBox = () =>
+            <NewHabitDialog onSubmit={handleSubmit} onDismiss={() => setDialogBoxToShow(null)} />
+          setDialogBoxToShow(DialogBox)
         }
         return Promise.resolve()
       }
@@ -93,6 +102,22 @@ export default function App() {
 
   const habitDetailMenuItems =  selectedHabit ? [
     {
+      text: 'Rename',
+      handler: () => {
+        const oldName = contextData.getHabitById(selectedHabit)['name']
+        const renameHandler = (newName: string) => {
+          if (newName.length > 0) {
+            contextData.renameHabit(selectedHabit, newName)
+          }
+          setDialogBoxToShow(null)
+        }
+        const DialogBox = () =>
+            <RenameHabitDialog oldName={oldName} onSubmit={renameHandler} onDismiss={() => setDialogBoxToShow(null)} />
+          setDialogBoxToShow(DialogBox)
+        return Promise.resolve()
+      }
+    },
+    {
       text: contextData.getHabitById(selectedHabit).archived ? 'Unarchive':  'Archive',
       handler: () => {
         contextData.toggleArchiveForHabit(selectedHabit);
@@ -133,11 +158,7 @@ export default function App() {
           items={selectedHabit ? habitDetailMenuItems : mainMenuItems} 
           onClose={() => { setShowMenu(false) }}
         />
-        <NewHabitDialog
-          onSubmit={(habitName) => {contextData.addHabit(habitName); setShowNewHabitDialog(false)}}
-          onDismiss={() => { setShowNewHabitDialog(false) }}
-          visible={showNewHabitDialog}
-        />
+        {DialogBoxToShow}
       </SafeAreaView>
     </AppContext.Provider>
   );
