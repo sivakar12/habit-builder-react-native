@@ -87,14 +87,16 @@ type ChartsPropType = {
     timestampsSortedDown: number[]
 }
 const Charts = ({timestampsSortedDown}: ChartsPropType) => {
-    const [periodType, setPeriodType] = useState(PeriodType.Day)
-    const initialStartDate = dayjs().startOf(periodType)
-    const initialEndDate = dayjs().endOf(periodType)
+    const [periodType, setPeriodType] = useState(PeriodType.Month)
+
+    const getStartAndEndTime = () => {
+        return [dayjs().startOf(periodType), dayjs().endOf(periodType)]
+    }
 
     
-    const [[filterDateStart, filterDateEnd], setFilterRange] = useState([initialStartDate, initialEndDate])
+    const [[filterDateStart, filterDateEnd], setFilterRange] = useState(getStartAndEndTime())
     useEffect(() => {
-        setFilterRange([filterDateEnd.startOf(periodType), filterDateEnd.endOf(periodType)])
+        setFilterRange(getStartAndEndTime())
     }, [periodType])
     
     const startTimestamp = filterDateStart.toDate().getTime()
@@ -163,10 +165,6 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
             </VictoryChart>
         </ScrollView>
     const handlePeriodTypeClick = (newPeriodType: PeriodType) => {
-        // Second click is to go to the current period
-        if (periodType === newPeriodType) {
-            setFilterRange([initialStartDate, initialEndDate])
-        }
         setPeriodType(newPeriodType)
     }
 
