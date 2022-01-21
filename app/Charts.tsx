@@ -162,6 +162,7 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
                     minDomain={{x: 0}}
                 />
                 <VictoryAxis/>
+                <VictoryAxis dependentAxis tickFormat={(t: string) => (t.toString().indexOf('.') > -1) ? '': t}/>
             </VictoryChart>
         </ScrollView>
     const handlePeriodTypeClick = (newPeriodType: PeriodType) => {
