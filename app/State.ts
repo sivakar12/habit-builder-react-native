@@ -10,6 +10,7 @@ interface HabitBuilderContext {
     getHabitById: (habitId: Id) => Habit | null,
     addHabit: (habitName: string) => void,
     deleteHabit: (habitId: Id) => void,
+    deleteLastEntry: (habitId: Id) => void,
     renameHabit: (habitId: Id, newName: string) => void,
     toggleArchiveForHabit: (habitId: Id) => void,
     loadSampleData: () => void
@@ -21,6 +22,7 @@ const AppContext = React.createContext<HabitBuilderContext>({
     getHabitById: (habitId: Id) => null,
     addHabit: (habitName: string) => {},
     deleteHabit: (habitId: Id) => {},
+    deleteLastEntry: (habitId: Id) => {},
     renameHabit: (habitId: Id, newName: string) => {},
     toggleArchiveForHabit: (habitId: Id) => {},
     loadSampleData: () => {}
@@ -76,6 +78,17 @@ const makeInitialContextData = () => {
         setHabits(newHabits)
     }
 
+    const deleteLastEntry = (habitId: Id) => {
+        const newHabits = habits.map(habit => {
+            if (habit.id === habitId) {
+                return {...habit, logs: habit.logs.slice(0, habit.logs.length - 1)}
+            } else {
+                return habit
+            }
+        })
+        setHabits(newHabits)
+    }
+
     const renameHabit = (habitId: Id, newName: string) => {
         const newHabits = habits.map(habit => {
             if (habit.id === habitId) {
@@ -111,6 +124,7 @@ const makeInitialContextData = () => {
         addHabit,
         setHabits,
         deleteHabit,
+        deleteLastEntry,
         renameHabit,
         toggleArchiveForHabit
     }
