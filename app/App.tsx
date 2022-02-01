@@ -10,11 +10,14 @@ import * as DocumentPicker from 'expo-document-picker';
 import HabitListView from './HabitListView';
 import HabitDetailView from './HabitDetailView';
 import HeaderBar from './HeaderBar';
-import { AppContext, makeInitialContextData } from './State';
+import { useHabitsReducer, Action, AppContext } from './State';
 import Menu from './Menu';
 import { colorPalette } from './StyleConstants';
 import { DeleteConfirmationDialog, NewHabitDialog, RenameHabitDialog } from './DialogBoxes';
 import { Rect } from 'victory-native';
+import SampleData from './SampleData';
+import { Habit, Id } from './Types';
+
 
 export default function App() {
 
@@ -23,7 +26,10 @@ export default function App() {
   const [DialogBoxToShow, setDialogBoxToShow] = useState<React.FunctionComponent | null>(null)
   const [showMenu, setShowMenu] = useState(false)
 
-  const contextData = makeInitialContextData()
+  const [habits, dispatch] = useHabitsReducer()
+
+  const getHabitById = (id: Id) => habits.filter(habit => habit.id === id)[0]
+
 
   const mainMenuItems = [
     {
@@ -32,12 +38,12 @@ export default function App() {
         if (Platform.OS === 'web') {
           const habitName = prompt('Enter name of new habit')
           if (habitName) {
-            contextData.addHabit(habitName)
+            dispatch({ type: 'ADD_HABIT', habitName })
           }
         } else if (Platform.OS === 'ios' || Platform.OS == 'android') {
           const handleSubmit = (habitName: string) => {
             if (habitName.length > 0) {
-              contextData.addHabit(habitName)
+              dispatch({ type: 'ADD_HABIT', habitName })
             }
             setDialogBoxToShow(null)
           }
@@ -54,7 +60,7 @@ export default function App() {
         const timeString = new Date().toISOString();
         const fileUri = FileSystem.cacheDirectory + 'habitsbuilderdata-' + timeString + '.json';
         return FileSystem.writeAsStringAsync(
-              fileUri, JSON.stringify(contextData.habits, null, 2))
+              fileUri, JSON.stringify(habits, null, 2))
           .then(Sharing.isAvailableAsync)
           .then(isAvailable => {
             if (isAvailable) {
@@ -74,7 +80,7 @@ export default function App() {
               FileSystem.readAsStringAsync(result.uri)
               .then(fileContents => {
                 const readHabits = JSON.parse(fileContents);
-                contextData.setHabits(readHabits);
+                dispatch({ type: 'SET_HABITS', habits: readHabits })
                 Alert.alert('Habit data imported form file');
               })
             } else if (result.type == 'cancel') {
@@ -87,7 +93,7 @@ export default function App() {
     {
       text: 'Load sample data',
       handler: () => {
-        contextData.loadSampleData()
+        dispatch({ type: 'SET_HABITS', habits: SampleData })
         return Promise.resolve()
       }
     },
@@ -104,17 +110,18 @@ export default function App() {
     {
       text: 'Delete Last Entry',
       handler: () => {
-        contextData.deleteLastEntry(selectedHabit)
+        dispatch({ type: 'DELETE_LAST_ENTRY', habitId: selectedHabit })
         return Promise.resolve()
       }
     },
     {
       text: 'Rename',
       handler: () => {
-        const oldName = contextData.getHabitById(selectedHabit)['name']
+
+        const oldName = getHabitById(selectedHabit)['name'];
         const renameHandler = (newName: string) => {
           if (newName.length > 0) {
-            contextData.renameHabit(selectedHabit, newName)
+            dispatch({ type: 'RENAME_HABIT', habitId: selectedHabit, newName })
           }
           setDialogBoxToShow(null)
         }
@@ -125,9 +132,9 @@ export default function App() {
       }
     },
     {
-      text: contextData.getHabitById(selectedHabit).archived ? 'Unarchive':  'Archive',
+      text: getHabitById(selectedHabit).archived ? 'Unarchive':  'Archive',
       handler: () => {
-        contextData.toggleArchiveForHabit(selectedHabit);
+        dispatch({ type: 'TOGGLE_ARCHIVE', habitId: selectedHabit });
         return Promise.resolve()
       }
     },
@@ -135,7 +142,7 @@ export default function App() {
       text: 'Delete',
       handler: () => {
         const deleteHandler = () => {
-          contextData.deleteHabit(selectedHabit)
+          dispatch({ type: 'DELETE_HABIT', habitId: selectedHabit })
           setDialogBoxToShow(null)
           setSelectedHabit(null)
         }
@@ -152,7 +159,7 @@ export default function App() {
     return <AppLoading/>
   }
   return (
-    <AppContext.Provider value={contextData}>
+    <AppContext.Provider value={{state: habits, dispatch}}>
       <SafeAreaView style={styles.safeArea}>
         <HeaderBar 
           title="Habit Builder"

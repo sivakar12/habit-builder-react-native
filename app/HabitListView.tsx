@@ -48,7 +48,7 @@ type  HabitListViewPropType = {
     showArchives: boolean
 }
 const HabitListView = (props: HabitListViewPropType) => {
-    const {habits, incrementHabit} = useContext(AppContext);
+    const {state: habits, dispatch} = useContext(AppContext);
     const habitsToDisplay = props.showArchives ? 
         habits : habits.filter(habit => !habit.archived)
     return (
@@ -56,7 +56,7 @@ const HabitListView = (props: HabitListViewPropType) => {
             <HabitList>
                 {habitsToDisplay.map((habit, index) => {
                     const onIncrementHandler = () => {
-                        incrementHabit(habit.id)
+                        dispatch({type: 'INCREMENT_HABIT', habitId: habit.id})
                         if (Platform.OS === 'android' || Platform.OS === 'ios') {
                             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
                         }

@@ -8,7 +8,6 @@ dayjs.extend(localizedFormat)
 
 import { AppContext } from './State';
 import { colorPalette, fontSizes, padding } from './StyleConstants';
-import { HabitLog } from './Types';
 import Charts from './Charts'
 
 type LogListProps = {
@@ -46,8 +45,8 @@ type HabitDetailViewPropTypes = {
 }
 const HabitDetailView = ({ habitId }: HabitDetailViewPropTypes) => {
     
-    const { getHabitById } = useContext(AppContext)
-    const habit = getHabitById(habitId)
+    const { state: habits, dispatch } = useContext(AppContext)
+    const habit = habits.filter(habit => habit.id === habitId)[0]
     if (!habit) {
         return <View><Text>404</Text></View>
     }
