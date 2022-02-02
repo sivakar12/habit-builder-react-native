@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, Platform, StatusBar, Alert } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, Modal, StatusBar, Alert, Text } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { useFonts, PatuaOne_400Regular } from '@expo-google-fonts/patua-one';
 import { useFonts as useFonts2, PassionOne_400Regular } from '@expo-google-fonts/passion-one';
@@ -10,13 +10,13 @@ import * as DocumentPicker from 'expo-document-picker';
 import HabitListView from './HabitListView';
 import HabitDetailView from './HabitDetailView';
 import HeaderBar from './HeaderBar';
-import { useHabitsReducer, Action, AppContext } from './State';
+import { useHabitsReducer, AppContext } from './State';
 import Menu from './Menu';
 import { colorPalette } from './StyleConstants';
 import { DeleteConfirmationDialog, NewHabitDialog, RenameHabitDialog } from './DialogBoxes';
-import { Rect } from 'victory-native';
 import SampleData from './SampleData';
-import { Habit, Id } from './Types';
+import { Id } from './Types';
+import About from './About';
 
 
 export default function App() {
@@ -24,7 +24,8 @@ export default function App() {
   const [selectedHabit, setSelectedHabit] = useState<string | null>(null)
   const [showArchives, setShowArchives] = useState(false)
   const [DialogBoxToShow, setDialogBoxToShow] = useState<React.FunctionComponent | null>(null)
-  const [showMenu, setShowMenu] = useState(false)
+
+  const [ModalToShow, setModalToShow] = useState<React.FunctionComponent | null>(null)
 
   const [habits, dispatch] = useHabitsReducer()
 
@@ -104,6 +105,16 @@ export default function App() {
         return Promise.resolve()
       }
     },
+    {
+      text: 'About',
+      handler: () => {
+        return new Promise((resolve, reject) => {
+          const DialogBox = () =>
+            <About onClose={() => { setModalToShow(null); resolve(null); }} />
+          setModalToShow(DialogBox)
+        })
+      }
+    }
   ]
 
   const habitDetailMenuItems =  selectedHabit ? [
@@ -158,6 +169,13 @@ export default function App() {
   if (!(fontsLoaded && fontsLoaded2)) {
     return <AppLoading/>
   }
+
+  const handleMenuOpen = () => {
+    const items = selectedHabit ? habitDetailMenuItems : mainMenuItems
+    const MenuComponent = () => <Menu items={items} onClose={() => setModalToShow(null)} />
+    setModalToShow(MenuComponent)
+  }
+
   return (
     <AppContext.Provider value={{state: habits, dispatch}}>
       <SafeAreaView style={styles.safeArea}>
@@ -165,18 +183,16 @@ export default function App() {
           title="Habit Builder"
           showBack={selectedHabit !== null}
           handleBack={() => setSelectedHabit(null)}
-          handleMenu={() => setShowMenu(showMenu => !showMenu)}
+          handleMenu={handleMenuOpen}
           />
         { 
           (selectedHabit) ? 
           <HabitDetailView habitId={selectedHabit}/> : 
           <HabitListView onHabitSelect={setSelectedHabit} showArchives={showArchives}/> 
         }
-        <Menu
-          open={showMenu} 
-          items={selectedHabit ? habitDetailMenuItems : mainMenuItems} 
-          onClose={() => { setShowMenu(false) }}
-        />
+        <Modal style={styles.modal} visible={ModalToShow != null} animationType='slide'>
+            {ModalToShow}
+        </Modal>
         {DialogBoxToShow}
       </SafeAreaView>
     </AppContext.Provider>
@@ -188,5 +204,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     backgroundColor: colorPalette[0]
-  }
+  },
+  modal: {
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })

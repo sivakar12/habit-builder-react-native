@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, Modal, SafeAreaView, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native'
 import { colorPalette } from './StyleConstants'
 
 type MenuItem = {
@@ -8,19 +8,14 @@ type MenuItem = {
 }
 
 type MenuProps = {
-  open: boolean,
   items: MenuItem[],
   onClose: () => void
 }
 
-const Menu = ({ open, items, onClose }: MenuProps) => {
+const Menu = ({ items, onClose }: MenuProps) => {
   return (
-    <Modal style={styles.menuModal} visible={open} animationType="slide">
-      <SafeAreaView>
+    <SafeAreaView>
       <View style={styles.menuList}>
-        {/* <View style={styles.closeButton}>
-          <Text onPress={onClose} style={styles.closeButtonText}>x</Text>
-        </View> */}
         {items.map(item => (
           <TouchableOpacity 
             key={item.text} 
@@ -39,8 +34,7 @@ const Menu = ({ open, items, onClose }: MenuProps) => {
           <Text style={styles.menuItemText}>Cancel</Text>
         </TouchableOpacity>
       </View>
-      </SafeAreaView>
-    </Modal>
+    </SafeAreaView>
   )
 }
 
