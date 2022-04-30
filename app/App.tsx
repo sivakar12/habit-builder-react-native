@@ -180,7 +180,7 @@ export default function App() {
     <AppContext.Provider value={{state: habits, dispatch}}>
       <SafeAreaView style={styles.safeArea}>
         <HeaderBar 
-          title="Habit Builder"
+          title="Small Wins"
           showBack={selectedHabit !== null}
           handleBack={() => setSelectedHabit(null)}
           handleMenu={handleMenuOpen}

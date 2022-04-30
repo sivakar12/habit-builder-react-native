@@ -1,6 +1,6 @@
-# Habit Builder
+# Small Wins
 
-## About 
+## About
 
 Instant gratification helps build a habit. Most habits don't give instant rewards but ticking something off gives a dopamine
 hit which act as a proxy reward. It makes you feel good about what you do. This app has counters for each habit and shows your
@@ -8,7 +8,7 @@ progress over the weeks and days in charts, which is a really good motivation, i
 
 ## How to run
 
-This can be run inside Expo Go app using <a href="exp://exp.host/@sivakar12/habit-builder">this URL</a>
+This can be run inside Expo Go app using <a href="exp://exp.host/@sivakar12/small-wins">this URL</a>
 
 Or you can close this repo, `npm install` and then use either of the following 
 - Run `npm start` and then point your device to the QR code which opens it in Expo Go, whihch may need to be installed
