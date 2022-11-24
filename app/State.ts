@@ -34,10 +34,15 @@ const habitsReducer = (state: State, action: Action): State => {
                 }
             });
         case 'ADD_HABIT':
+            const findNextId = (state: State): Id => {
+                const ids = state.map(habit => parseInt(habit.id));
+                const maxId = Math.max(...ids);
+                return (maxId + 1).toString();
+            }
             return [
                 ...state,
                 {
-                    id: state.length.toString(),
+                    id: findNextId(state),
                     name: action.habitName,
                     createdTime: dayjs().toISOString(),
                     archived: false,
