@@ -74,18 +74,18 @@ const styles = StyleSheet.create({
         fontFamily: 'PatuaOne_400Regular',
         fontSize: 100,
         textAlign: 'center',
-        backgroundColor: colorPalette[2],
-        color: 'white'
+        backgroundColor: colorPalette['primary'],
+        color: colorPalette['background'],
     },
     habitName: {
         textAlign: 'center',
         fontFamily: 'PatuaOne_400Regular',
         fontSize: fontSizes[0],
-        backgroundColor: colorPalette[1],
-        color: 'white'
+        backgroundColor: colorPalette['primary'],
+        color: colorPalette['background'],
     },
     logList: {
-        backgroundColor: colorPalette[3]
+        backgroundColor: colorPalette['background']
     },
     logListItem: {
         flexDirection: 'row',
@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
         fontSize: fontSizes[1],
         fontFamily: 'PatuaOne_400Regular',
         paddingHorizontal: padding,
+        color: colorPalette['primary']
     }
 })
 

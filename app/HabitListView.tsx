@@ -20,10 +20,9 @@ type HabitPropType = {
 }
 
 const HabitItem = ({ habit, onIncrement, onSelect, index }: HabitPropType) => {
-    const color = index % 2 == 0 ? colorPalette[2] : colorPalette[4]
     const habitNameDisplay = habit.archived ? `${habit.name} (archived)` : habit.name
     return (
-        <View style={StyleSheet.compose(styles.habitItem, {backgroundColor: color})}> 
+        <View style={StyleSheet.compose(styles.habitItem, {backgroundColor: colorPalette['background']})}> 
             <TouchableOpacity onPress={onSelect} style={styles.habitNameContainer}>
                 <Text style={styles.habitNameText}>{habitNameDisplay}</Text>
             </TouchableOpacity>
@@ -92,14 +91,19 @@ const styles = StyleSheet.create({
         fontSize: fontSizes[1],
         paddingHorizontal: padding,
         fontWeight: 'bold',
-        color: 'white'
+        color: colorPalette['primary']
     },
     habitIncrementButton: {
-        backgroundColor: '#fff0',
+        backgroundColor: colorPalette['accent'],
+        borderRadius: 100,
         fontSize: fontSizes[1],
         fontFamily: 'PatuaOne_400Regular',
         paddingHorizontal: padding,
-        color: 'white'
+        aspectRatio: 1,
+        textAlignVertical: 'center',
+        textAlign: 'center',
+        paddingTop: 3,
+        color: colorPalette['primary']
     },
     habitNameContainer: {
         flexGrow: 1,
@@ -107,7 +111,7 @@ const styles = StyleSheet.create({
     habitNameText: {
         fontFamily: 'PatuaOne_400Regular',
         fontSize: fontSizes[1],
-        color: 'white'
+        color: colorPalette['primary']
     },
     habitListView: {
         flex: 1

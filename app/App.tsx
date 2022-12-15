@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-    backgroundColor: colorPalette[0]
+    backgroundColor: colorPalette['background']
   },
   modal: {
     height: '100%',

@@ -22,7 +22,7 @@ const About = ({ onClose }: AboutProps) => {
 const styles = StyleSheet.create({
 
   container: {
-    backgroundColor: colorPalette[0],
+    backgroundColor: colorPalette['background'],
     height: '100%',
     alignItems: 'center',
   },

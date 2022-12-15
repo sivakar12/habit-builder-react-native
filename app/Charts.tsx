@@ -153,16 +153,28 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
     }))
 
     const chartWidth = Math.max(Dimensions.get('window').width - 40, 600)
+
+    const chartStyle = {
+        data: { fill: colorPalette['primary'] },
+        labels: { fill: colorPalette['primary'] }
+    }
+    const axisStyle = {
+        axis: { stroke: colorPalette['primary'] },
+        ticks: {stroke: colorPalette['primary'] },
+        tickLabels: { fill: colorPalette['primary'] }
+    }
     const ChartView = () => 
         <ScrollView horizontal>
+
             <VictoryChart width={chartWidth} domainPadding={10}>
                 <VictoryBar
+                    style={chartStyle}
                     data={chartData}
                     categories={{x: labels.map(s => s.toString().substring(0, 3))}}
                     minDomain={{x: 0}}
                 />
-                <VictoryAxis/>
-                <VictoryAxis dependentAxis tickFormat={(t: string) => (t.toString().indexOf('.') > -1) ? '': t}/>
+                <VictoryAxis style={axisStyle}/>
+                <VictoryAxis style={axisStyle} dependentAxis tickFormat={(t: string) => (t.toString().indexOf('.') > -1) ? '': t}/>
             </VictoryChart>
         </ScrollView>
     const handlePeriodTypeClick = (newPeriodType: PeriodType) => {
@@ -191,16 +203,19 @@ const Charts = ({timestampsSortedDown}: ChartsPropType) => {
 const styles = StyleSheet.create({
     chartContainer: {
         alignContent: 'center',
-        backgroundColor: colorPalette[4]
+        backgroundColor: colorPalette['background']
     },
     chooser: {
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        color: colorPalette['primary'],
     },
+    // TODO: Refactor repeating styles
     chooserValueText: {
         fontFamily: 'PatuaOne_400Regular',
         fontSize: fontSizes[1],
-        padding: padding
+        padding: padding,
+        color: colorPalette['primary'],
     },
     periodChangerRow: {
         flexDirection: 'row',
@@ -208,11 +223,13 @@ const styles = StyleSheet.create({
     },
     periodChangerArrow: {
         fontFamily: 'PatuaOne_400Regular',
-        fontSize: fontSizes[1]
+        fontSize: fontSizes[1],
+        color: colorPalette['primary'],
     },
     periodChangerDisplay: {
         fontFamily: 'PatuaOne_400Regular',
         fontSize: fontSizes[1],
+        color: colorPalette['primary'],
     }
 })
 

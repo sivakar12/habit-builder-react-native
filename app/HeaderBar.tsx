@@ -29,25 +29,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    backgroundColor: colorPalette[0],
+    backgroundColor: colorPalette['background'],
     paddingHorizontal: 10
   },
   backButtonText: {
     fontSize: 40,
     textAlign: 'center',
     fontFamily: 'PassionOne_400Regular',
-    color: 'white'
+    color: colorPalette['accent']
   },
   menuButtonText: {
     fontSize: 40,
     textAlign: 'center',
     fontFamily: 'PassionOne_400Regular',
-    color: 'white'
+    color: colorPalette['accent']
   },
   headerBarText: {
     fontSize: 40,
     fontFamily: 'PassionOne_400Regular',
-    color: 'white'
+    color: colorPalette['accent']
   },
   menuButtonContainer: {
     width: 50,

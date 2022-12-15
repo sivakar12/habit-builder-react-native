@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   menuList: {
-    backgroundColor: colorPalette[0],
+    backgroundColor: colorPalette['background'],
     height: '100%',
     alignItems: 'center',
     // justifyContent: 'flex-end',
@@ -59,16 +59,8 @@ const styles = StyleSheet.create({
   menuItemText: {
     fontSize: 20,
     fontFamily: 'PatuaOne_400Regular',
-    textAlign: 'center'
-  },
-  closeButton: {
-    alignSelf: 'flex-end',
-    padding: 10,
-    backgroundColor: 'red'
-  },
-  closeButtonText: {
-    fontSize: 20,
-    color: 'white',
+    textAlign: 'center',
+    color: colorPalette['accent']
   }
 })
 
