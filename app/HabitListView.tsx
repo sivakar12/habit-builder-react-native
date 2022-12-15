@@ -22,6 +22,10 @@ type HabitPropType = {
 const HabitItem = ({ habit, onIncrement, onSelect, index }: HabitPropType) => {
     const habitNameDisplay = habit.archived ? `${habit.name} (archived)` : habit.name
     const backgroundColor = index % 2 === 0 ? colorPalette['backgroundDarker'] : colorPalette['background']
+    const plusButtonStyle = {
+        ...styles.habitIncrementButtonText,
+        color: backgroundColor
+    }
     return (
         <View style={StyleSheet.compose(styles.habitItem, {backgroundColor: backgroundColor})}> 
             <TouchableOpacity onPress={onSelect} style={styles.habitNameContainer}>
@@ -30,8 +34,7 @@ const HabitItem = ({ habit, onIncrement, onSelect, index }: HabitPropType) => {
             <Text style={styles.habitLogCount}>{habit.logs.length}</Text>
             <TouchableOpacity onPress={onIncrement}>
                 <View style={styles.habitIncrementButton}>
-
-                <Text style={styles.habitIncrementButtonText}>+</Text>
+                    <Text style={plusButtonStyle}>+</Text>
                 </View>
             </TouchableOpacity>
         </View>
@@ -108,7 +111,7 @@ const styles = StyleSheet.create({
     habitIncrementButtonText: {
         fontSize: fontSizes[1],
         fontFamily: 'PatuaOne_400Regular',
-        color: colorPalette['primary']
+        color: colorPalette['background']
     },
     habitNameContainer: {
         flexGrow: 1,
