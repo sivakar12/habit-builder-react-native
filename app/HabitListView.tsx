@@ -28,7 +28,10 @@ const HabitItem = ({ habit, onIncrement, onSelect, index }: HabitPropType) => {
             </TouchableOpacity>
             <Text style={styles.habitLogCount}>{habit.logs.length}</Text>
             <TouchableOpacity onPress={onIncrement}>
-                <Text style={styles.habitIncrementButton}>+</Text>
+                <View style={styles.habitIncrementButton}>
+
+                <Text style={styles.habitIncrementButtonText}>+</Text>
+                </View>
             </TouchableOpacity>
         </View>
     )
@@ -95,14 +98,15 @@ const styles = StyleSheet.create({
     },
     habitIncrementButton: {
         backgroundColor: colorPalette['accent'],
+        alignItems: 'center',
+        textAlign: 'center',
+        aspectRatio: 1,
         borderRadius: 100,
+        paddingBottom: 4
+    },
+    habitIncrementButtonText: {
         fontSize: fontSizes[1],
         fontFamily: 'PatuaOne_400Regular',
-        paddingHorizontal: padding,
-        aspectRatio: 1,
-        textAlignVertical: 'center',
-        textAlign: 'center',
-        paddingTop: 3,
         color: colorPalette['primary']
     },
     habitNameContainer: {
