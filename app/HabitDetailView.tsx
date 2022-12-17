@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { View, Text, StyleSheet, FlatList } from 'react-native'
+import styled from 'styled-components/native'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
@@ -10,6 +11,23 @@ import { AppContext } from './State';
 import { colorPalette, fontSizes, padding } from './StyleConstants';
 import Charts from './Charts'
 
+
+const LogListStyled = styled.FlatList`
+    backgroundColor: ${props => props.theme.colorPalette.background}
+
+`
+const LogListItemStyled = styled.View`
+    flexDirection: row;
+    justifyContent: space-between;
+    padding: ${props => props.theme.padding}px
+`
+
+const LogListItemTextStyled = styled.Text`
+    fontSize: ${props => props.theme.fontSizes[1]};
+    fontFamily: 'PatuaOne_400Regular';
+    paddingHorizontal: ${props => props.theme.padding}px;
+    color: ${props => props.theme.colorPalette.primary};
+`
 type LogListProps = {
     timestampsSortedDown: number[]
 }
@@ -18,21 +36,20 @@ const LogListItem = ({ millisecond }: { millisecond: number}) => {
     const absoluteTime = dayjs(millisecond).format('lll')
     const relativeTime = dayjs(millisecond).fromNow()
     return (
-        <View style={styles.logListItem}>
-            <Text style={styles.logListItemText}>
+        <LogListItemStyled>
+            <LogListItemTextStyled>
                 {absoluteTime}
-            </Text>
-            <Text style={styles.logListItemText}>
+            </LogListItemTextStyled>
+            <LogListItemTextStyled>
                 {relativeTime}
-            </Text>
-        </View>
+            </LogListItemTextStyled>
+        </LogListItemStyled>
     )
 }
 
 const LogList = ({ timestampsSortedDown }: LogListProps) => {
     return (
-        <FlatList
-            style={styles.logList}
+        <LogListStyled
             data={timestampsSortedDown}
             renderItem={({item}) => <LogListItem millisecond={item}/>}
             keyExtractor={ms => ms.toString()}
@@ -85,18 +102,12 @@ const styles = StyleSheet.create({
         color: colorPalette['background'],
     },
     logList: {
-        backgroundColor: colorPalette['background']
     },
     logListItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: padding,
+        
     },
     logListItemText: {
-        fontSize: fontSizes[1],
-        fontFamily: 'PatuaOne_400Regular',
-        paddingHorizontal: padding,
-        color: colorPalette['primary']
+        
     }
 })
 

@@ -1,24 +1,35 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, Platform, Modal, StatusBar, Alert, Text } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, Modal, StatusBar, Alert, Text, useColorScheme } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { useFonts, PatuaOne_400Regular } from '@expo-google-fonts/patua-one';
 import { useFonts as useFonts2, PassionOne_400Regular } from '@expo-google-fonts/passion-one';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
+import styled,{createGlobalStyle, ThemeProvider} from 'styled-components/native';
 
 import HabitListView from './HabitListView';
 import HabitDetailView from './HabitDetailView';
 import HeaderBar from './HeaderBar';
 import { useHabitsReducer, AppContext } from './State';
 import Menu from './Menu';
-import { colorPalette } from './StyleConstants';
+import { colorPalette, colorPaletteDark, fontSizes, padding } from './StyleConstants';
 import { DeleteConfirmationDialog, NewHabitDialog, RenameHabitDialog } from './DialogBoxes';
 import SampleData from './SampleData';
 import { Id } from './Types';
 import About from './About';
 
+const SafeAreaViewStyled = styled.SafeAreaView`
+  flex: 1;
+  paddingTop: ${() => Platform.OS === 'android' ? StatusBar.currentHeight : 0};
+  backgroundColor: ${props => props.theme.colorPalette['background']}
+`
 
+const ModalStyled = styled.Modal`
+  height: 100%;
+  alignItems: center;
+  justifyContent: center;
+`
 export default function App() {
 
   const [selectedHabit, setSelectedHabit] = useState<string | null>(null)
@@ -164,6 +175,7 @@ export default function App() {
     }
   ]: [];
 
+  const colorScheme = useColorScheme()
   let [fontsLoaded] = useFonts({PatuaOne_400Regular})
   let [fontsLoaded2] = useFonts2({PassionOne_400Regular})
   if (!(fontsLoaded && fontsLoaded2)) {
@@ -176,38 +188,32 @@ export default function App() {
     setModalToShow(MenuComponent)
   }
 
+  const theme = {
+    fontSizes,
+    padding,
+    colorPalette: colorScheme == 'dark' ? colorPaletteDark : colorPalette
+  }
   return (
     <AppContext.Provider value={{state: habits, dispatch}}>
-      <SafeAreaView style={styles.safeArea}>
-        <HeaderBar 
-          title="Small Wins"
-          showBack={selectedHabit !== null}
-          handleBack={() => setSelectedHabit(null)}
-          handleMenu={handleMenuOpen}
-          />
-        { 
-          (selectedHabit) ? 
-          <HabitDetailView habitId={selectedHabit}/> : 
-          <HabitListView onHabitSelect={setSelectedHabit} showArchives={showArchives}/> 
-        }
-        <Modal style={styles.modal} visible={ModalToShow != null} animationType='slide'>
-            {ModalToShow}
-        </Modal>
-        {DialogBoxToShow}
-      </SafeAreaView>
+      <ThemeProvider theme={theme}>
+        <SafeAreaViewStyled>
+          <HeaderBar 
+            title="Small Wins"
+            showBack={selectedHabit !== null}
+            handleBack={() => setSelectedHabit(null)}
+            handleMenu={handleMenuOpen}
+            />
+          { 
+            (selectedHabit) ? 
+            <HabitDetailView habitId={selectedHabit}/> : 
+            <HabitListView onHabitSelect={setSelectedHabit} showArchives={showArchives}/> 
+          }
+          <ModalStyled visible={ModalToShow != null} animationType='slide'>
+              {ModalToShow}
+          </ModalStyled>
+          {DialogBoxToShow}
+        </SafeAreaViewStyled>
+      </ThemeProvider>
     </AppContext.Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-    backgroundColor: colorPalette['background']
-  },
-  modal: {
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})

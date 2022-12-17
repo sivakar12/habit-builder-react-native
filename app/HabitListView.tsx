@@ -1,12 +1,10 @@
-import { property } from 'lodash';
 import React, { useContext } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import styled from 'styled-components/native';
 
 import { AppContext } from './State';
-import { padding, fontSizes } from './StyleConstants';
 import { Habit } from './Types';
-import { colorPalette } from './StyleConstants';
 
 type HabitListPropType = { 
     children: React.ReactNode | React.ReactNode[],
@@ -19,31 +17,67 @@ type HabitPropType = {
     index: number
 }
 
+const PlusButtonText = styled.Text`
+    fontSize: ${props => props.theme.fontSizes[1]};
+    color: ${props => props.index % 2 == 0 ? props.theme.colorPalette.backgroundDarker : props.theme.colorPalette.background};
+    fontFamily: PatuaOne_400Regular;
+    paddingBottom: 4px;
+    fontWeight: bold;
+`
+
+const PlusButton = styled.View`
+    backgroundColor: ${props => props.theme.colorPalette.accent};
+    alignItems: center;
+    textAlign: center;
+    aspectRatio: 1;
+    borderRadius: 100%;
+`
+
+const HabitName = styled.Text`
+    fontSize: ${props => props.theme.fontSizes[1]};
+    fontFamily: PatuaOne_400Regular;
+    color: ${props => props.theme.colorPalette.primary};
+`
+
+const HabitLogCount = styled.Text`
+padding: ${props => props.theme.padding}px;
+fontSize: ${props => props.theme.fontSizes[1]};
+fontFamily: PatuaOne_400Regular;
+fontWeight: bold;
+color: ${props => props.theme.colorPalette.primary};
+`;
+
+const HabitItemLine = styled.View`
+flexDirection: row;
+justifyContent: space-between;
+alignItems: center;
+padding: ${props => props.theme.padding}px;
+fontSize: ${props => props.theme.fontSizes[1]};
+backgroundColor: ${props => props.index % 2 == 0 ? props.theme.colorPalette.backgroundDarker : props.theme.colorPalette.background};
+
+`
+
 const HabitItem = ({ habit, onIncrement, onSelect, index }: HabitPropType) => {
     const habitNameDisplay = habit.archived ? `${habit.name} (archived)` : habit.name
-    const backgroundColor = index % 2 === 0 ? colorPalette['backgroundDarker'] : colorPalette['background']
-    const plusButtonStyle = {
-        ...styles.habitIncrementButtonText,
-        color: backgroundColor
-    }
+
     return (
-        <View style={StyleSheet.compose(styles.habitItem, {backgroundColor: backgroundColor})}> 
-            <TouchableOpacity onPress={onSelect} style={styles.habitNameContainer}>
-                <Text style={styles.habitNameText}>{habitNameDisplay}</Text>
+        <HabitItemLine index={index}> 
+            <TouchableOpacity style={{flexGrow: 1}} onPress={onSelect}>
+                <HabitName>{habitNameDisplay}</HabitName>
             </TouchableOpacity>
-            <Text style={styles.habitLogCount}>{habit.logs.length}</Text>
+            <HabitLogCount>{habit.logs.length}</HabitLogCount>
             <TouchableOpacity onPress={onIncrement}>
-                <View style={styles.habitIncrementButton}>
-                    <Text style={plusButtonStyle}>+</Text>
-                </View>
+                <PlusButton>
+                    <PlusButtonText index={index}>+</PlusButtonText>
+                </PlusButton>
             </TouchableOpacity>
-        </View>
+        </HabitItemLine>
     )
 }
 
 const HabitList = ({ children }: HabitListPropType) => {
     return (
-        <View style={styles.habitList}>
+        <View style={{ flex: 1}}>
             {children}
         </View>
     )
@@ -58,7 +92,7 @@ const HabitListView = (props: HabitListViewPropType) => {
     const habitsToDisplay = props.showArchives ? 
         habits : habits.filter(habit => !habit.archived)
     return (
-        <ScrollView style={styles.habitListView}>
+        <ScrollView style={{ flex: 1}}>
             <HabitList>
                 {habitsToDisplay.map((habit, index) => {
                     const onIncrementHandler = () => {
@@ -81,53 +115,5 @@ const HabitListView = (props: HabitListViewPropType) => {
         </ScrollView>
     ) 
 }
-const styles = StyleSheet.create({
-    habitItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: padding,
-        fontSize: fontSizes[1],
-    },
-    habitList: {
-        flex: 1,
-    },
-    habitLogCount: {
-        padding: padding,
-        fontFamily: 'PatuaOne_400Regular',
-        fontSize: fontSizes[1],
-        paddingHorizontal: padding,
-        fontWeight: 'bold',
-        color: colorPalette['primary']
-    },
-    habitIncrementButton: {
-        backgroundColor: colorPalette['accent'],
-        alignItems: 'center',
-        textAlign: 'center',
-        aspectRatio: 1,
-        borderRadius: 100,
-        paddingBottom: 4
-    },
-    habitIncrementButtonText: {
-        fontSize: fontSizes[1],
-        fontFamily: 'PatuaOne_400Regular',
-        color: colorPalette['background']
-    },
-    habitNameContainer: {
-        flexGrow: 1,
-    },
-    habitNameText: {
-        fontFamily: 'PatuaOne_400Regular',
-        fontSize: fontSizes[1],
-        color: colorPalette['primary']
-    },
-    habitListView: {
-        flex: 1
-    },
-    title: {
-        fontSize: fontSizes[0],
-        alignSelf: 'center'
-    }
-})
 
 export { HabitListView as default }
