@@ -20,9 +20,8 @@ type HabitPropType = {
 const PlusButtonText = styled.Text`
     fontSize: ${props => props.theme.fontSizes[1]};
     color: ${props => props.index % 2 == 0 ? props.theme.colorPalette.backgroundDarker : props.theme.colorPalette.background};
-    fontFamily: PatuaOne_400Regular;
+    fontFamily: 'PatuaOne_400Regular';
     paddingBottom: 4px;
-    fontWeight: bold;
 `
 
 const PlusButton = styled.View`
@@ -30,20 +29,19 @@ const PlusButton = styled.View`
     alignItems: center;
     textAlign: center;
     aspectRatio: 1;
-    borderRadius: 100%;
+    borderRadius: 100;
 `
 
 const HabitName = styled.Text`
     fontSize: ${props => props.theme.fontSizes[1]};
-    fontFamily: PatuaOne_400Regular;
+    fontFamily: 'PatuaOne_400Regular';
     color: ${props => props.theme.colorPalette.primary};
 `
 
 const HabitLogCount = styled.Text`
 padding: ${props => props.theme.padding}px;
 fontSize: ${props => props.theme.fontSizes[1]};
-fontFamily: PatuaOne_400Regular;
-fontWeight: bold;
+fontFamily: 'PatuaOne_400Regular';
 color: ${props => props.theme.colorPalette.primary};
 `;
 
