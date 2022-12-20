@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, Platform, Modal, StatusBar, Alert, Text, useColorScheme } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, SafeAreaView, Platform, Modal, StatusBar, Alert, Text, useColorScheme, BackHandler } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { useFonts, PatuaOne_400Regular } from '@expo-google-fonts/patua-one';
 import { useFonts as useFonts2, PassionOne_400Regular } from '@expo-google-fonts/passion-one';
@@ -174,6 +174,22 @@ export default function App() {
       }
     }
   ]: [];
+
+  // handle back button on Android
+  useEffect(() => {
+    const backAction = () => {
+      if (selectedHabit) {
+        setSelectedHabit(null)
+        return true
+      }
+      return false
+    }
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    )
+    return () => backHandler.remove()
+  }, [selectedHabit])
 
   const colorScheme = useColorScheme()
   let [fontsLoaded] = useFonts({PatuaOne_400Regular})
